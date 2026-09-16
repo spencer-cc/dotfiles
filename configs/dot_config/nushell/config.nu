@@ -148,6 +148,7 @@ if not (which fzf | is-empty) {
             | get command
             | uniq
             | reverse
+            | to text
             | fzf --height=~12 --reverse --border rounded
               --color $"bg:-1,bg+:($theme.surface1),fg+:($theme.text),hl+:($theme.yellow),hl:($theme.yellow),border:($theme.overlay0),prompt:($theme.lavender),pointer:($theme.rosewater),marker:($theme.teal),spinner:($theme.teal),info:($theme.overlay2),query:($theme.text)")
           if ($selection | is-empty) { return }
