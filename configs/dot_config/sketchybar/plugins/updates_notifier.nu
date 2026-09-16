@@ -4,7 +4,8 @@ def main [name: string, animation_type: string, animation_speed: string] {
   use ../core/icons.nu *
 
   # takes multiple seconds
-  let result = do { ^softwareupdate -l } | complete
+  # Absolute path: launchd services don't have /usr/sbin on PATH.
+  let result = do { ^/usr/sbin/softwareupdate -l } | complete
 
   let has_updates = if $result.exit_code == 0 {
 
