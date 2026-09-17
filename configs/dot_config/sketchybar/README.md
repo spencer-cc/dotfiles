@@ -7,7 +7,7 @@ A modular, Nushell-based sketchybar configuration with automatic bracket wrappin
 - [sketchybar](https://github.com/FelixKratz/SketchyBar)
 - [Nushell](https://www.nushell.sh/)
 - [aerospace](https://github.com/nikitabobko/AeroSpace) (window manager) for workspace widgets
-- [getfocus](https://github.com/FreeSamples00/getfocus_stdout) (focus mode detection) — requires **Full Disk Access** to read `~/Library/DoNotDisturb/DB/Assertions.json`. Grant via System Settings > Privacy & Security > Full Disk Access > sketchybar. Without it, the focus notifier shows a warning triangle instead of hiding.
+- [getfocus](https://github.com/spencer-cc/getfocus_stdout) (focus mode detection) — requires **Full Disk Access** to read `~/Library/DoNotDisturb/DB/Assertions.json`. Grant via System Settings > Privacy & Security > Full Disk Access > sketchybar. Without it, the focus notifier shows a warning triangle instead of hiding.
 - `softwareupdate` (built into macOS) for the update notifier — no extra dependency, but each check shells out to `softwareupdate -l`, which takes several seconds
 - Fonts:
   - SpaceMono Nerd Font Mono
