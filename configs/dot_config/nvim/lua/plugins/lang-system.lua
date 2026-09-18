@@ -228,6 +228,10 @@ local languages = {
     lsp = "asm_lsp",
     formatter = "asmfmt",
   },
+
+  backus_naur = {
+    treesitter = "ebnf",
+  },
 }
 
 return {
