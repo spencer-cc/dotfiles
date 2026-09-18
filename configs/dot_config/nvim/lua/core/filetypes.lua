@@ -1,6 +1,3 @@
---- Filetype detection for dotfiles (stow dot-** and .** naming conventions)
---- See: GNU stow dotfile naming patterns
-
 -- explicit mappings for dotfiles whose extension doesn't match their syntax
 local dot_mappings = {
   ["zshrc"] = "zsh",
@@ -10,22 +7,32 @@ local dot_mappings = {
   ["gitconfig"] = "toml",
 }
 
+-- user-local extension → filetype mappings
+local extension_mappings = {
+  ["bnf"] = "ebnf",
+}
+
 vim.filetype.add({
   pattern = {
+    -- strip a trailing '.tmpl'
+    [".*/(.+)%.tmpl$"] = function(path, bufnr)
+      local stripped = path:match("(.+)%.tmpl$")
+      return vim.filetype.match({ filename = stripped, buf = bufnr })
+    end,
     -- map '.foo' files (e.g. .zshrc → zsh)
     [".*/%.([%w_-]+)$"] = function(_, _, name)
       return dot_mappings[name] or name
     end,
-    -- map 'dot-foo' files (stow convention, e.g. dot-zshrc → zsh)
-    [".*/dot%-([%w_-]+)$"] = function(_, _, name)
+    -- map chezmoi source names with attribute prefixes
+    [".*/[a-z_]*dot_([%w_-]+)$"] = function(_, _, name)
       return dot_mappings[name] or name
     end,
   },
-  extension = {
+  extension = vim.tbl_extend("force", {
     tex = "tex",
     bib = "tex",
     aux = "tex",
-  },
+  }, extension_mappings),
   filename = {
     --["foo"] = "bar"
   },

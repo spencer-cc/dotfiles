@@ -230,6 +230,7 @@ local languages = {
   },
 
   backus_naur = {
+    filetype = "bnf",
     treesitter = "ebnf",
   },
 }
