@@ -4,6 +4,9 @@
 --- buffer-local i_<CR> per buffer, and its `fallback` resolves mappings at
 --- registration time — a buffer-local race here made CR intermittently ignore
 --- the completion menu. Global mapping keeps the chain deterministic.
+--- replace_keycodes must be true: blink's fallback runs the returned string
+--- through nvim_replace_termcodes only when replace_keycodes == 1, so with
+--- false the "<cmd>...<cr>" text was typed literally into the buffer.
 
 return {
   "bullets-vim/bullets.vim",
@@ -26,13 +29,14 @@ return {
     vim.g.bullets_renumber_on_change = 0 -- don't auto-renumber
     vim.g.bullets_set_mappings = 0 -- manual mappings only (see keys above)
 
-    -- Global i_<CR>: bullets in markdown, stock CR elsewhere. Expr + no
-    -- replace_keycodes so blink.cmp's fallback can resolve and re-feed it.
+    -- Global i_<CR>: bullets in markdown, stock CR elsewhere. Expr mapping;
+    -- replace_keycodes=true lets blink.cmp's fallback translate the returned
+    -- <Cmd>...<CR> via nvim_replace_termcodes before re-feeding it.
     vim.keymap.set("i", "<CR>", function()
       if vim.bo.filetype == "markdown" then
         return "<cmd>InsertNewBullet<cr>"
       end
       return "<CR>"
-    end, { expr = true, replace_keycodes = false, desc = "New Bullet (markdown)" })
+    end, { expr = true, replace_keycodes = true, desc = "New Bullet (markdown)" })
   end,
 }
