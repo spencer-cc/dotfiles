@@ -41,6 +41,23 @@ function prompt() {
 PROMPT_DIRTRIM=1
 PROMPT_COMMAND=prompt
 
+# ==== env variables ====
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+# ==== editor / pager ====
+if command -v nvim >/dev/null 2>&1; then
+  export EDITOR=nvim VISUAL=nvim
+fi
+if command -v bat >/dev/null 2>&1; then
+  export PAGER=bat
+fi
+
+# ==== brew ====
+if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
 # ==== history ====
 HISTCONTROL=ignoreboth
 shopt -s histappend
@@ -110,24 +127,6 @@ export LESS_TERMCAP_ZN=$'\e[0m'
 
 # ==== git and diff colors ====
 export CLICOLOR=1
-# git colors managed by Home Manager (programs.git module)
-
-# ==== env variables ====
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CACHE_HOME="$HOME/.cache"
-
-# ==== editor / pager ====
-if command -v nvim >/dev/null 2>&1; then
-  export EDITOR=nvim VISUAL=nvim
-fi
-if command -v bat >/dev/null 2>&1; then
-  export PAGER=bat
-fi
-
-# ==== brew ====
-if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
 
 # ==== umask ====
 umask 002
