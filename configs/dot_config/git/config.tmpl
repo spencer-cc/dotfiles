@@ -7,8 +7,9 @@
 
 [core]
     excludesfile = ~/.gitignore
+{{ if (lookPath "delta") }}
     pager = delta -s
-    editor = nvim
+{{ end }}
 
 [pull]
     rebase = false
@@ -18,17 +19,6 @@
     status = auto
     diff = auto
     branch = auto
-
-[merge]
-    tool = nvim
-    conflictStyle = zdiff3
-
-[mergetool]
-    keepBackup = false
-    prompt = false
-
-[mergetool "nvim"]
-    cmd = "MERGED=\"$MERGED\" nvim -d -c \"wincmd l\" -c \"norm! ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\""
 
 [delta]
     line-numbers = true

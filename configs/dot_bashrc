@@ -64,13 +64,13 @@ bind "set mark-symlinked-directories on" # add trailing / to dirs
 bind "set colored-stats on"              # colorize
 
 # ==== aliases ====
-alias config='vim ~/.bashrc'
+alias config='$EDITOR ~/.bashrc'
 alias reload='clear && exec bash'
 alias ls='ls -A --color=auto'
 alias sizeof="du -hs"
 alias cls="clear; ls"
 alias c="clear"
-alias e="vim"
+alias e="$EDITOR"
 alias '?'='echo $?'
 alias less='less -R'
 alias rm='rm -I'
@@ -115,6 +115,14 @@ export CLICOLOR=1
 # ==== env variables ====
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
+
+# ==== editor / pager ====
+if command -v nvim >/dev/null 2>&1; then
+  export EDITOR=nvim VISUAL=nvim
+fi
+if command -v bat >/dev/null 2>&1; then
+  export PAGER=bat
+fi
 
 # ==== brew ====
 if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
