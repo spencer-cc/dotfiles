@@ -58,6 +58,11 @@ if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
+# ==== snap ====
+if [ -d /snap/bin ]; then
+  PATH="/snap/bin:$PATH"
+fi
+
 # ==== history ====
 HISTCONTROL=ignoreboth
 shopt -s histappend
