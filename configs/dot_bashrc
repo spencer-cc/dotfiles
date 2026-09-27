@@ -116,6 +116,7 @@ alias ga='git add'
 alias grmc='git rm --cached'
 alias gbs='git switch'
 alias gb='git branch'
+alias gd="git diff"
 
 # ==== colorize man pages ====
 export LESS_TERMCAP_mb=$'\e[1;36m'
