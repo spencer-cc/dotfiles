@@ -57,7 +57,7 @@
       "minimize-to-application" = true;
       launchanim = false;
       magnification = false;
-      orientation = "bottom";
+      orientation = "right";
       mru-spaces = false;
     };
 
