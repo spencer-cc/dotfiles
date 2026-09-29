@@ -1,4 +1,4 @@
---- Snacks setup: toggle mappings, debug helpers, help window in floating split
+--- Snacks setup: toggle mappings, debug helpers, help/man window in floating split
 --- vim.g.autoformat_enabled is the cross-module toggle for format-on-save (see core/autocmds)
 
 local wrap_options = require("helpers.utils").wrap_options
@@ -255,20 +255,26 @@ return {
       end,
     })
 
-    -- open :help in a floating window instead of a split
+    -- open :help and :Man in a floating window instead of a split
     vim.api.nvim_create_autocmd("BufWinEnter", {
-      pattern = "*.txt",
+      pattern = { "*.txt", "man://*" },
       callback = function()
-        if vim.bo.filetype == "help" then
+        if vim.bo.filetype == "help" or vim.bo.filetype == "man" then
           local win = vim.api.nvim_get_current_win()
           local cfg = vim.api.nvim_win_get_config(win)
           if cfg.relative == "" then -- not already floating
             local buf = vim.api.nvim_get_current_buf()
+            local ft = vim.bo.filetype
+            if ft == "man" then
+              -- man.lua sets bufhidden='unload': closing the only window would
+              -- wipe the page before the float opens (help buffers use 'hide')
+              vim.bo[buf].bufhidden = "hide"
+            end
             vim.api.nvim_win_close(win, false)
             Snacks.win({
               buf = buf,
               border = "rounded",
-              title = " Help ",
+              title = ft == "man" and " Man " or " Help ",
               width = 0.9,
               height = 0.8,
               wo = vim.tbl_extend("force", wrap_options, {
