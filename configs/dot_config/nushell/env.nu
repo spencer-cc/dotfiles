@@ -39,26 +39,65 @@ if ($env.TERM | str contains "ghostty") and ($env.COLORTERM? | is-empty) {
 }
 
 # ----- External Configs -----
-# Shell tool integrations generated at startup (cache file approach)
+# Shell tool integrations generated at startup
 # aggregator.nu sources these from ~/.cache/nushell/
 
-mkdir ~/.cache/nushell
+let cache_dir = $env.XDG_CACHE_HOME | path join "nushell"
+mkdir $cache_dir
 
-if not (which starship | is-empty) {
-  starship init nu | save -f ~/.cache/nushell/starship.nu
-}
-if not (which zoxide | is-empty) {
-  zoxide init nushell --no-cmd | save -f ~/.cache/nushell/zoxide.nu
-}
-if not (which carapace | is-empty) {
-  carapace _carapace nushell | save -f ~/.cache/nushell/carapace.nu
-}
-if not (which just | is-empty) {
-  $env.JUST_COMPLETE_ALIASES = 'true'
-  $env.JUST_COMMAND_COLOR = 'black'
-  $env.JUST_EXPLAIN = 'true'
-  $env.JUST_UNSORTED = 'true'
-  just --completions nushell | save -f ~/.cache/nushell/just.nu
+let tool_inits = [
+  {
+    name: starship
+    file: starship.nu
+    gen: {|| starship init nu }
+  }
+  {
+    name: zoxide
+    file: zoxide.nu
+    gen: {|| zoxide init nushell --no-cmd }
+  }
+  {
+    name: carapace
+    file: carapace.nu
+    gen: {|| carapace _carapace nushell }
+  }
+  {
+    name: just
+    file: just.nu
+    gen: {|| just --completions nushell }
+    env: {
+      JUST_COMPLETE_ALIASES: 'true'
+      JUST_COMMAND_COLOR: 'black'
+      JUST_EXPLAIN: 'true'
+      JUST_UNSORTED: 'true'
+    }
+  }
+]
+
+for t in $tool_inits {
+  let path = $cache_dir | path join $t.file
+  let bin = which $t.name | get --optional 0.path
+  let needs_gen = (if $bin == null {
+    false # missing tool -> write stub below
+  } else if not ($path | path exists) {
+    true
+  } else {
+    (ls $path | get 0.modified) < (ls $bin | get 0.modified)
+  })
+  if $bin != null {
+    for e in ($t.env? | default {} | transpose key value) {
+      $env = ($env | upsert $e.key $e.value)
+    }
+  }
+  if $needs_gen {
+    try {
+      do $t.gen | save -f $path
+    } catch {
+      '' | save -f $path
+    }
+  } else if not ($path | path exists) {
+    '' | save -f $path # stub for missing tool
+  }
 }
 
 $env.SHELL = "/bin/bash" # set shell to bash for tools that need it
