@@ -16,9 +16,24 @@
     ...
   }: let
     vars = import ./variables.nix;
-    system = vars.system;
+    # Host platform detection:
+    #   - Pure eval (macOS deploys, `nix flake check`): currentSystem is
+    #     unavailable, so vars.system (the macOS machine) is used.
+    #   - Linux deploys run with --impure, where currentSystem resolves and
+    #     the correct Linux platform is picked — no per-machine file edits.
+    hostSystem = builtins.currentSystem or vars.system;
+    system =
+      if nixpkgs.lib.hasInfix "-linux" hostSystem
+      then hostSystem
+      else vars.system;
     pkgs = nixpkgs.legacyPackages.${system};
-    username = vars.username;
+    # Username: taken from the environment when evaluating with --impure
+    # (Linux deploys), falling back to variables.nix under pure eval.
+    envUser = builtins.getEnv "USER";
+    username =
+      if envUser != ""
+      then envUser
+      else vars.username;
     homeDirectory =
       if pkgs.stdenv.hostPlatform.isDarwin
       then "/Users/${username}"
@@ -49,28 +64,33 @@
     };
 
     # nix-darwin configuration (macOS only — only builds when system is darwin)
-    darwinConfigurations."${username}-mac" = nix-darwin.lib.darwinSystem {
-      inherit system;
-      specialArgs = {inherit username homeDirectory;};
-      modules = [
-        ./darwin/system.nix
-        ./darwin/brew.nix
-        ./darwin/services.nix
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = specialArgs;
-          home-manager.users.${username} = {pkgs, ...}: {
-            imports = [./profiles/macos.nix];
-            home = {
-              inherit username;
-              homeDirectory = nixpkgs.lib.mkForce homeDirectory;
-              stateVersion = "25.05";
-            };
-          };
-        }
-      ];
-    };
+    darwinConfigurations =
+      if pkgs.stdenv.hostPlatform.isDarwin
+      then {
+        "${username}-mac" = nix-darwin.lib.darwinSystem {
+          inherit system;
+          specialArgs = {inherit username homeDirectory;};
+          modules = [
+            ./darwin/system.nix
+            ./darwin/brew.nix
+            ./darwin/services.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = specialArgs;
+              home-manager.users.${username} = {pkgs, ...}: {
+                imports = [./profiles/macos.nix];
+                home = {
+                  inherit username;
+                  homeDirectory = nixpkgs.lib.mkForce homeDirectory;
+                  stateVersion = "25.05";
+                };
+              };
+            }
+          ];
+        };
+      }
+      else {};
   };
 }

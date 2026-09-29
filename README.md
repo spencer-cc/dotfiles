@@ -41,8 +41,10 @@ just dot apply          # Chezmoi configs
 ### Linux with Nix
 
 ```bash
-# Deploy packages via Home Manager
-just pack deploy default
+# Bootstrap: install Nix (if needed) + deploy packages via Home Manager
+./scripts/setup-nix.sh
+
+# Deploy configs via chezmoi
 just dot apply
 ```
 

@@ -67,14 +67,44 @@ Grant Karabiner input monitoring permission on first launch:
 
 ## Linux with Nix
 
-```bash
-# Deploy packages via Home Manager
-just pack deploy default
+### Bootstrap (script)
 
-# Initialize chezmoi + deploy configs
-just dot init
+On a fresh Linux machine, clone the repo and run the bootstrap script:
+
+```bash
+git clone <dotfiles-url> && cd dotfiles
+./scripts/setup-nix.sh            # default profile
+./scripts/setup-nix.sh minimal    # or: minimal | default | security
+```
+
+The script:
+
+1. Installs Nix via the [Determinate Nix installer](https://github.com/DeterminateSystems/nix-installer) (skipped if `nix` is already on PATH):
+   - systemd + sudo → multi-user install with daemon
+   - sudo, no systemd (containers, WSL1) → single-user install, `--init none`
+   - no root access → aborts (Nix requires `/nix` at the filesystem root; see [nix-portable](https://github.com/nix-community/nix-portable) for a rootless workaround)
+2. Deploys the chosen package profile via Home Manager (no pre-installed HM CLI needed — it runs through `nix run`)
+
+Linux deploys evaluate the flake with `--impure` so the username and platform are picked up from the environment — no per-machine file edits. On machines where your login isn't `scc`, profile keys resolve as `<login>-<profile>` automatically.
+
+### Deploy configs
+
+```bash
+just dot init     # once: prompts for git name/email
 just dot apply
 ```
+
+PATH is handled by the deployed configs: the nushell launcher and `env.nu` prepend `~/.nix-profile/bin` on Linux.
+
+### Manual bootstrap
+
+Equivalent to the script, without the installer:
+
+```bash
+nix run home-manager -- switch --impure --flake "./nix#$USER-default" -b backup
+```
+
+Run from the repo root (`-b backup` preserves conflicting files).
 
 ## Linux without Nix (e.g., university machine)
 

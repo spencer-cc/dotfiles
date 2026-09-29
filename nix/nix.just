@@ -1,32 +1,42 @@
 # === Nix Commands ===
 
+# Local username (flake profile keys are "<username>-<profile>").
+# Linux deploys evaluate with --impure so the flake picks up USER for
+# username + platform; macOS pure eval falls back to variables.nix.
+username := env_var_or_default('USER', 'scc')
+
+# Platform decides the deployment mechanism; the profile argument decides
+# the package set. On macOS the profile argument is ignored — nix-darwin
+# manages the whole system (packages + settings + services) via the
+# "<username>-mac" configuration. `mac` is accepted as a no-op alias.
+
 _default:
     @just --unsorted --list pack
 
 # Dry-build: list build results
 [group('build')]
 dry profile='default':
-    {{ if profile == 'mac' { 'nix build "./#darwinConfigurations.scc-mac.system" --dry-run --no-link' } else { 'nix build "./#homeConfigurations.scc-' + profile + '.activationPackage" --dry-run --no-link' } }}
+    {{ if os() == "macos" { 'nix build "./#darwinConfigurations.' + username + '-mac.system" --dry-run --no-link' } else { 'nix build --impure "./#homeConfigurations.' + username + '-' + profile + '.activationPackage" --dry-run --no-link' } }}
 
 # Build: build, no switch
 [group('build')]
 build profile='default':
-    {{ if profile == 'mac' { 'sudo darwin-rebuild build --flake "./#scc-mac"' } else { 'home-manager build --flake "./#scc-{{ profile }}"' } }}
+    {{ if os() == "macos" { 'sudo darwin-rebuild build --flake "./#' + username + '-mac"' } else { 'nix run home-manager -- build --impure --flake "./#' + username + '-' + profile + '"' } }}
 
 # Deploy: build and switch
 [group('deploy')]
 deploy profile='default':
-    {{ if profile == 'mac' { 'sudo darwin-rebuild switch --flake "./#scc-mac"' } else { 'home-manager switch --flake "./#scc-{{ profile }}" -b backup' } }}
+    {{ if os() == "macos" { 'sudo darwin-rebuild switch --flake "./#' + username + '-mac"' } else { 'nix run home-manager -- switch --impure --flake "./#' + username + '-' + profile + '" -b backup' } }}
 
 # Rollback to previous generation
 [group('deploy')]
-rollback profile='default':
-    {{ if profile == 'mac' { 'sudo darwin-rebuild rollback' } else { 'home-manager rollback' } }}
+rollback:
+    {{ if os() == "macos" { 'sudo darwin-rebuild rollback' } else { 'nix run home-manager -- rollback' } }}
 
 # List generations
 [group('deploy')]
-generations profile='default':
-    {{ if profile == 'mac' { 'darwin-rebuild --list-generations' } else { 'home-manager generations' } }}
+generations:
+    {{ if os() == "macos" { 'darwin-rebuild --list-generations' } else { 'nix run home-manager -- generations' } }}
 
 # Update flake inputs
 [group('maintenance')]

@@ -27,7 +27,8 @@ dotfiles/
 │   │   ├── security.nix         # Security/forensics toolkit
 │   │   └── macos.nix            # macOS desktop (darwin profile)
 │   ├── darwin/                  # nix-darwin modules (system, services, brew)
-│   └── nix.just                 # Justfile module for Nix commands
+│   ├── nix.just                 # Justfile module for Nix commands
+│   └── ../scripts/setup-nix.sh  # Linux bootstrap (Nix + HM profile)
 ├── data/Brewfile               # Fallback package list
 ├── dot.just                    # Chezmoi commands
 ├── brew.just                   # Brew commands
