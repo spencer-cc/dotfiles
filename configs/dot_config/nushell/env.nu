@@ -85,9 +85,7 @@ for t in $tool_inits {
     (ls $path | get 0.modified) < (ls $bin | get 0.modified)
   })
   if $bin != null {
-    for e in ($t.env? | default {} | transpose key value) {
-      $env = ($env | upsert $e.key $e.value)
-    }
+    load-env ($t.env? | default {})
   }
   if $needs_gen {
     try {
