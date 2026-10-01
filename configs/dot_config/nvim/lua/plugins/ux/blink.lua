@@ -3,33 +3,7 @@
 -- prebuilt fuzzy binary from the pinned release; must load before LSP attaches
 -- so its capabilities are registered with every client
 
-local kind_icons = {
-  Text = "󰉿",
-  Method = "󰆧",
-  Function = "󰊕",
-  Constructor = "",
-  Field = "󰜢",
-  Variable = "󰀫",
-  Class = "󰠲",
-  Interface = "󰰃",
-  Module = "󰏓",
-  Property = "󰜷",
-  Unit = "󰑭",
-  Value = "󰎠",
-  Enum = "󰉻",
-  Keyword = "󰌋",
-  Snippet = "󰘍",
-  Color = "󰏘",
-  File = "󰈔",
-  Reference = "󰈇",
-  Folder = "󰉋",
-  EnumMember = "",
-  Constant = "󰏿",
-  Struct = "󰙅",
-  Event = "󱐋",
-  Operator = "󰆕",
-  TypeParameter = "󰊄",
-}
+local kind_icons = require("helpers.lsp_kinds")
 
 return {
   "saghen/blink.cmp",

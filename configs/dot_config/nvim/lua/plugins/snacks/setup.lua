@@ -152,7 +152,7 @@ return {
         Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
         Snacks.toggle.diagnostics():map("<leader>ud")
         Snacks.toggle.treesitter():map("<leader>uT")
-        Snacks.toggle.inlay_hints():map("H")
+        Snacks.toggle.inlay_hints():map("<leader>uh")
         Snacks.toggle.indent():map("<leader>ug")
         Snacks.toggle.option("colorcolumn", { name = "Color Column", off = "", on = "80" }):map("<leader>uv")
 

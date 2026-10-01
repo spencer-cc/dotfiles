@@ -96,6 +96,14 @@ vim.keymap.set("c", "<M-b>", "<S-Left>")
 vim.keymap.set("c", "<M-f>", "<S-Right>")
 vim.keymap.set("c", "<M-BS>", "<C-w>")
 
+---- LSP ----
+
+-- action picker for the current buffer/symbol; doubles as capability info
+-- in non-LSP buffers (unavailable actions shown dimmed)
+map("n", "H", function()
+  require("lang-system.lsp_actions").open()
+end, "LSP Actions")
+
 ---- Disabled Keymaps ----
 
 vim.keymap.set("n", "Q", "<Nop>") -- ex mode
@@ -103,7 +111,7 @@ vim.keymap.set("n", "gQ", "<Nop>")
 vim.keymap.set("n", "q:", "<Nop>") -- command window
 vim.keymap.set("n", "q/", "<Nop>")
 vim.keymap.set("n", "q?", "<Nop>")
-vim.keymap.set({ "n", "x" }, "J", "<Nop>") -- free for LSP hover
+vim.keymap.set({ "n", "x" }, "J", "<Nop>") -- free for LSP diagnostics (buffer-local)
 
 -- fold operations disabled (zz/zt/zb/zg/zw/zh/zl still work)
 for _, key in ipairs(require("helpers.globals").disabled_fold_keys) do
