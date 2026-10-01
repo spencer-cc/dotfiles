@@ -131,8 +131,9 @@ if not (which fzf | is-empty) {
           let selection = (fd --type file --hidden --exclude .git
             | fzf --height=~12 --reverse --border rounded
               --color $"bg:-1,bg+:($theme.surface1),fg+:($theme.text),hl+:($theme.yellow),hl:($theme.yellow),border:($theme.overlay0),prompt:($theme.lavender),pointer:($theme.rosewater),marker:($theme.teal),spinner:($theme.teal),info:($theme.overlay2),query:($theme.text)")
-          if ($selection | is-empty) { return }
-          commandline edit --insert $selection
+          if ($selection | is-not-empty) {
+            commandline edit --insert $selection
+          }
         '
       }
     }
@@ -144,15 +145,18 @@ if not (which fzf | is-empty) {
       event: {
         send: executehostcommand
         cmd: '
+          let query = (commandline | str trim)
           let selection = (history
             | get command
             | uniq
             | reverse
             | to text
             | fzf --height=~12 --reverse --border rounded
+              --query $query
               --color $"bg:-1,bg+:($theme.surface1),fg+:($theme.text),hl+:($theme.yellow),hl:($theme.yellow),border:($theme.overlay0),prompt:($theme.lavender),pointer:($theme.rosewater),marker:($theme.teal),spinner:($theme.teal),info:($theme.overlay2),query:($theme.text)")
-          if ($selection | is-empty) { return }
-          commandline edit --replace $selection
+          if ($selection | is-not-empty) {
+            commandline edit --replace $selection
+          }
         '
       }
     }
