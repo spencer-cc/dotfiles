@@ -96,8 +96,12 @@ local languages = {
     filetypes = { "java" },
     treesitter = "java",
     lsp = "jdtls",
-    -- No external formatter: jdtls's built-in Eclipse JDT formatter handles
-    -- formatting (respects project .settings/org.eclipse.jdt.core.prefs).
+    config = {
+      root_markers = {
+        { ".project", "mvnw", "gradlew", "settings.gradle", "settings.gradle.kts", ".git" },
+        { "build.xml", "pom.xml", "build.gradle", "build.gradle.kts" },
+      },
+    },
   },
 
   markdown = {
