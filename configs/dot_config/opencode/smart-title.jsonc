@@ -11,8 +11,6 @@
   // Examples: "anthropic/claude-haiku-4-5", "openai/gpt-5-mini"
   // "model": "anthropic/claude-haiku-4-5",
 
-  "model": "opencode/big-pickle",
-
   // Update title every N idle events (default: 1)
   "updateThreshold": 2,
 }

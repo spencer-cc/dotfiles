@@ -5,8 +5,7 @@
   "default_agent": "plan",
   "share": "disabled",
   "subagent_depth": 2,
-  "plugin": [
-    "@tarquinen/opencode-smart-title",
+  "plugins": [
     "@mohak34/opencode-notifier@latest",
   ],
   "provider": {
@@ -91,7 +90,7 @@
   "agent": {
     "plan": {
       "mode": "primary",
-      "color": "primary",
+      "color": "#f59a64",
       "model": "synthetic/hf:zai-org/GLM-5.3-Flash",
       "reasoningEffort": "medium",
       "permission": {
@@ -123,7 +122,7 @@
     },
     "build": {
       "mode": "primary",
-      "color": "secondary",
+      "color": "#67c0ea",
       "model": "synthetic/hf:zai-org/GLM-5.3-Flash",
       "reasoningEffort": "medium",
       "permission": {
@@ -272,6 +271,54 @@
           "*": "ask",
           "/tmp": "allow",
         },
+      },
+    },
+    "help": {
+      "mode": "primary",
+      "color": "#ee9dd4",
+      "model": "synthetic/hf:zai-org/GLM-5.3-Flash",
+      "reasoningEffort": "medium",
+      "temperature": 0.3,
+      "permission": {
+        "read": {
+          "*": "allow",
+          "*.priv": "deny",
+        },
+        "bash": {
+          "*": "deny",
+          "nu *": "deny",
+          "make *": "deny",
+          "just *": "deny",
+          "find *": "deny",
+          "git status": "allow",
+          "git status *": "allow",
+          "git diff": "allow",
+          "git diff *": "allow",
+          "git log": "allow",
+          "git log *": "allow",
+          "git show": "allow",
+          "git show *": "allow",
+          "git rev-parse *": "allow",
+        },
+        "grep": "allow",
+        "glob": "allow",
+        "list": "allow",
+        "lsp": "allow",
+        "codesearch": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "doom_loop": "ask",
+        "external_directory": {
+          "*": "ask",
+          "/tmp": "allow",
+          "~/.local/share/nvim": "allow",
+        },
+        "task": {
+          "*": "deny",
+          "explorer": "allow",
+          "librarian": "allow",
+        },
+        "question": "deny",
       },
     },
   },
