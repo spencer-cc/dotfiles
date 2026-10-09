@@ -1,0 +1,33 @@
+# Dust configuration file
+
+# Print tree upside down (biggest highest)
+reverse = true
+
+# Subdirectories will not have their path shortened
+display-full-paths = false
+
+# Use file length instead of blocks
+display-apparent-size = false
+
+# No colors will be printed
+no-colors = true
+
+# No percent bars or percentages will be displayed
+no-bars = true
+
+# No total row will be displayed
+skip-total = false
+
+# Do not display hidden files
+ignore-hidden = false
+
+# Only count files and directories on the same filesystem as the supplied directory
+limit-filesystem = true
+
+# print sizes in powers of 1000 (e.g., 1.1G)
+output-format = "si"
+
+number-of-lines = 20
+
+# To keep the .git directory collapsed
+collapse = [".git", "node_modules", "target", ".venv", "__pycache__"]
