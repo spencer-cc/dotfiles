@@ -8,6 +8,7 @@ source ~/.cache/nushell/just.nu
 
 source path.nu
 source completers.nu
+source direnv.nu
 
 # ---- Modules ----
 use shell-helpers.nu *

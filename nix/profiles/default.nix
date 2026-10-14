@@ -12,4 +12,10 @@
   ];
 
   fonts.fontconfig.enable = true;
+
+  # direnv + nix-direnv: flake devshell env on cd (cached evals)
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
 }
