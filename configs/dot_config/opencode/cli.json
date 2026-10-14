@@ -26,7 +26,8 @@
   "animations": true,
   "attention": {
     "volume": 1,
-    "notifications": true
+    "notifications": true,
+    "sound": false
   },
   "prompt": {
     "image_preview": true
