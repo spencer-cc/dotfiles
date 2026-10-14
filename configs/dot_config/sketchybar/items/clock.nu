@@ -25,7 +25,6 @@ def main [] {
     icon=($icon)
     script=($script)
     update_freq=($env.update_freq)
-    click_script=('open -na ghostty.app --args -e tty-clock -Bbsctn -C 5 -f "%A %m/%d %Y"')
     --subscribe
     $env.name
     system_woke
