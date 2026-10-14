@@ -46,7 +46,7 @@ export default Plugin.define({
       const q = quota();
       return (
         <text fg={theme.text?.base}>
-          {q ? `[ ${q.pw.toFixed(1)}% | ${Math.round(q.p5)}% ]` : ""}
+          {q ? `[ ${q.p5.toFixed(1)}% | ${Math.round(q.pw)}% ]` : ""}
         </text>
       );
     };
