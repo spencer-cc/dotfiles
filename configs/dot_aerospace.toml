@@ -227,6 +227,5 @@ cmd-alt-ctrl-shift-8 = [
 cmd-alt-ctrl-tab = "focus-monitor --wrap-around next"
 cmd-alt-ctrl-shift-tab = [
   "move-node-to-monitor --wrap-around next",
-  "focus-monitor --wrap-around next",
   "exec-and-forget sketchybar --trigger aerospace_workspace_change",
 ]
