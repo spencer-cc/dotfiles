@@ -7,7 +7,7 @@
     btop zellij jc nmap imagemagick pipx hugo catimg exiftool transmission_4 llvm
     python3Packages.pygments delta
     nerd-fonts.jetbrains-mono nerd-fonts.space-mono sketchybar-app-font
-    glow hyperfine figlet uv pre-commit
+    glow hyperfine figlet uv pre-commit tdf
     starship zoxide carapace
   ];
 
