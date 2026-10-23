@@ -22,70 +22,15 @@ def model-completer [] {
 
 # Get subscription usage and quota information
 export def usage [
-  --type (-t): string@[inference search] = "inference" # Usage to check
   --raw (-r) # Return unmodified API response
 ] {
   http get --headers {Authorization: $"Bearer (api_key)"} $"($url_base)($usage_route)"
   | if $raw { $in } else {
     $in
-    | if $type == "inference" {
-      let response = $in
-      let rolling = $response.rollingFiveHourLimit
-        | insert usage {|| {
-            percent: ($in.remaining / $in.max * 100)
-            used: ($in.max - $in.remaining)
-            remaining: ($in.remaining)
-            limit: ($in.max)
-          }}
-        | insert reset {|| {
-            next_tick: ($in.nextTickAt | date humanize)
-            tick_percent: ($in.tickPercent * 100 | into string -d 2 | $in + "%")
-            limited: ($in.limited)
-          }}
-        | reject nextTickAt tickPercent remaining max limited
-        | update usage.percent {|| $"($in | into string -d 2)%" }
-
-      let weekly = $response.weeklyTokenLimit
-        | insert usage {|| {
-            percent: ($in.percentRemaining)
-            used: (($in.maxCredits | str replace '$' '' | into float) - ($in.remainingCredits | str replace '$' '' | into float) | into string -d 2 | $"$($in)")
-            remaining: ($in.remainingCredits)
-            limit: ($in.maxCredits)
-          }}
-        | insert reset {|| {
-            next_regen: ($in.nextRegenAt | date humanize)
-            next_regen_credits: ($in.nextRegenCredits)
-            regen_percent: (($in.nextRegenCredits | str replace '$' '' | into float) / ($in.maxCredits | str replace '$' '' | into float) * 100 | into string -d 2 | $in + "%")
-          }}
-        | reject nextRegenAt nextRegenCredits percentRemaining maxCredits remainingCredits
-        | update usage.percent {|| $"($in | into string -d 2)%" }
-
-      {rolling: $rolling, weekly: $weekly} | table -e
-    } else if $type == "search" {
-      get search.hourly
-      | insert usage {|| {
-          percent: (($in.limit - $in.requests) / $in.limit * 100)
-          requests: ($in.requests)
-          limit: ($in.limit)
-        }}
-      | insert reset {|| {
-          relative: ($in.renewsAt | date humanize)
-          absolute: ($in.renewsAt | date to-timezone US/Central)
-          timezone: US/Central
-        }}
-      | reject renewsAt limit requests
-      | update usage.percent {|| $"($in | into string -d 2)%" }
-      | table -e
-    } else {
-      error make {
-        msg: $"usage type `($type)` not supported."
-        help: $"Use one of: [inference search]."
-        label: {
-          text: "unknown type"
-          span: (metadata $type | get span)
-        }
-      }
-    }
+    | update subscription.renewsAt { date humanize }
+    | update search.hourly.renewsAt { date humanize }
+    | update planWeeklyLimit.nextRegenAt { date humanize }
+    | table -e
   }
 }
 
@@ -148,15 +93,28 @@ export def chat [
   --raw (-r)                       # Return unmodified API response
 ] {
   let messages = if $system != null {
-    [{role: "system", content: $system}, {role: "user", content: $content}]
+    [
+      {role: "system", content: $system}
+      {role: "user", content: $content}
+    ]
   } else {
-    [{role: "user", content: $content}]
+    [
+      {role: "user", content: $content}
+    ]
   }
-  let body = { model: $model, messages: $messages }
-  let body = if $temperature != null { $body | insert temperature $temperature } else { $body }
-  let body = if $max_tokens != null { $body | insert max_tokens $max_tokens } else { $body }
-  let body = if $top_p != null { $body | insert top_p $top_p } else { $body }
-  let body = if $stop != null { $body | insert stop $stop } else { $body }
+  let body = {model: $model, messages: $messages}
+  let body = if $temperature != null {
+    $body | insert temperature $temperature
+  } else { $body }
+  let body = if $max_tokens != null {
+    $body | insert max_tokens $max_tokens
+  } else { $body }
+  let body = if $top_p != null {
+    $body | insert top_p $top_p
+  } else { $body }
+  let body = if $stop != null {
+    $body | insert stop $stop
+  } else { $body }
   let body = $body | to json
 
   http post --headers {Authorization: $"Bearer (api_key)"} $"($url_base)($chat_route)" $body
@@ -184,11 +142,19 @@ export def complete [
   --stop: string                   # Stop sequence
   --raw (-r)                       # Return unmodified API response
 ] {
-  let body = { model: $model, prompt: $prompt }
-  let body = if $temperature != null { $body | insert temperature $temperature } else { $body }
-  let body = if $max_tokens != null { $body | insert max_tokens $max_tokens } else { $body }
-  let body = if $top_p != null { $body | insert top_p $top_p } else { $body }
-  let body = if $stop != null { $body | insert stop $stop } else { $body }
+  let body = {model: $model, prompt: $prompt}
+  let body = if $temperature != null {
+    $body | insert temperature $temperature
+  } else { $body }
+  let body = if $max_tokens != null {
+    $body | insert max_tokens $max_tokens
+  } else { $body }
+  let body = if $top_p != null {
+    $body | insert top_p $top_p
+  } else { $body }
+  let body = if $stop != null {
+    $body | insert stop $stop
+  } else { $body }
   let body = $body | to json
 
   http post --headers {Authorization: $"Bearer (api_key)"} $"($url_base)($completions_route)" $body
@@ -212,8 +178,10 @@ export def embed [
   --dimensions: int                # Output embedding dimensions
   --raw (-r)                       # Return unmodified API response
 ] {
-  let body = { model: $model, input: $input }
-  let body = if $dimensions != null { $body | insert dimensions $dimensions } else { $body }
+  let body = {model: $model, input: $input}
+  let body = if $dimensions != null {
+    $body | insert dimensions $dimensions
+  } else { $body }
   let body = $body | to json
 
   http post --headers {Authorization: $"Bearer (api_key)"} $"($url_base)($embeddings_route)" $body
@@ -245,14 +213,26 @@ export def message [
 ] {
   let body = {
     model: $model
-    messages: [{role: "user", content: $content}]
+    messages: [
+      {role: "user", content: $content}
+    ]
     max_tokens: $max_tokens
   }
-  let body = if $system != null { $body | insert system $system } else { $body }
-  let body = if $temperature != null { $body | insert temperature $temperature } else { $body }
-  let body = if $top_p != null { $body | insert top_p $top_p } else { $body }
-  let body = if $top_k != null { $body | insert top_k $top_k } else { $body }
-  let body = if $stop != null { $body | insert stop_sequences $stop } else { $body }
+  let body = if $system != null {
+    $body | insert system $system
+  } else { $body }
+  let body = if $temperature != null {
+    $body | insert temperature $temperature
+  } else { $body }
+  let body = if $top_p != null {
+    $body | insert top_p $top_p
+  } else { $body }
+  let body = if $top_k != null {
+    $body | insert top_k $top_k
+  } else { $body }
+  let body = if $stop != null {
+    $body | insert stop_sequences $stop
+  } else { $body }
   let body = $body | to json
 
   http post --headers {Authorization: $"Bearer (api_key)"} $"($url_base)($messages_route)" $body
