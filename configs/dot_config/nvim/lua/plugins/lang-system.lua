@@ -222,7 +222,7 @@ local languages = {
     filetypes = { "nix" },
     treesitter = "nix",
     lsp = "nil_ls",
-    mason = { lsp = "nil" },
+    mason = { lsp = "nil", formatter = false }, -- alejandra comes from nix (nix gcc can't link Mason cargo builds)
     formatter = "alejandra",
   },
 

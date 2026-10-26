@@ -45,6 +45,7 @@
     uv
     pre-commit
     tdf
+    alejandra
     starship
     zoxide
     carapace
