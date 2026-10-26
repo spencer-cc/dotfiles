@@ -92,7 +92,12 @@ in {
           "--no-config-file"
           "${homeDirectory}/dotfiles/scripts/dir-tidy.nu"
         ];
-        StartCalendarInterval = [{Hour = 3; Minute = 0;}];
+        StartCalendarInterval = [
+          {
+            Hour = 3;
+            Minute = 0;
+          }
+        ];
         EnvironmentVariables = {
           PATH = servicePath;
           HOME = homeDirectory;
