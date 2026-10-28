@@ -16,8 +16,19 @@ export alias rm = rm -I
 export def cd --env --wrapped [...args: directory] { __zoxide_z ...$args }
 export alias rm = rm -I
 
-# clear shorthands
+# clear pushes content to scrollback instead of erasing
+export def --wrapped clear [...rest: string] {
+  if "--all" in $rest {
+    # erase screen + purge scrollback (old builtin default)
+    print -n $"\u{1b}[2J\u{1b}[3J\u{1b}[1;1H"
+  } else {
+    # Ctrl+L behavior: erase screen only, scrollback preserved
+    print -n $"\u{1b}[2J\u{1b}[1;1H"
+  }
+}
+
 export alias c = clear
+
 export def cls [
   --long (-l) # detailed ls
 ] {
