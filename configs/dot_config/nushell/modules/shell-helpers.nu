@@ -21,6 +21,12 @@ export def --wrapped clear [...rest: string] {
   if "--all" in $rest {
     # erase screen + purge scrollback (old builtin default)
     print -n $"\u{1b}[2J\u{1b}[3J\u{1b}[1;1H"
+  } else if ($env.ZELLIJ? != null) {
+    # zellij's 2J transfers the whole viewport (incl. trailing blanks) to
+    # scrollback — newline-overflow instead pushes only rows above the cursor
+    let rows = term size | get rows
+    print -n (1..$rows | each {|_| char newline } | str join)
+    print -n "\u{1b}[1;1H"
   } else {
     # Ctrl+L behavior: erase screen only, scrollback preserved
     print -n $"\u{1b}[2J\u{1b}[1;1H"
