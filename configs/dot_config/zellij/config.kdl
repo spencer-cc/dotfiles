@@ -1,7 +1,7 @@
 
 // Global Settings
 
-default_shell "nu"
+default_shell "/Users/scc/.local/bin/nushell"
 theme "catppuccin-mocha"
 welcome_screen false
 show_startup_tips false
