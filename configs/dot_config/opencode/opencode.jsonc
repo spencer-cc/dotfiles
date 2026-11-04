@@ -1,7 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "synthetic/hf:zai-org/GLM-5.3-Flash",
-  "default_agent": "plan",
+  "default_agent": "mentor",
   "share": "disabled",
   "experimental": {
     "subagent_depth": 2,
@@ -133,6 +133,32 @@
         {
           "action": "external_directory",
           "resource": "~/.local/share/nvim",
+          "effect": "allow",
+        },
+        { "action": "subagent", "resource": "*", "effect": "deny" },
+        { "action": "subagent", "resource": "explorer", "effect": "allow" },
+        { "action": "subagent", "resource": "librarian", "effect": "allow" },
+        { "action": "subagent", "resource": "oracle", "effect": "ask" },
+      ],
+    },
+    "mentor": {
+      "mode": "primary",
+      "color": "#c490f0",
+      "model": "synthetic/hf:zai-org/GLM-5.3-Flash#medium",
+      "permissions": [
+        { "action": "read", "resource": "*", "effect": "allow" },
+        { "action": "read", "resource": "*.priv", "effect": "deny" },
+        { "action": "grep", "resource": "*", "effect": "allow" },
+        { "action": "glob", "resource": "*", "effect": "allow" },
+        { "action": "list", "resource": "*", "effect": "allow" },
+        { "action": "lsp", "resource": "*", "effect": "allow" },
+        { "action": "webfetch", "resource": "*", "effect": "allow" },
+        { "action": "codesearch", "resource": "*", "effect": "allow" },
+        { "action": "question", "resource": "*", "effect": "allow" },
+        { "action": "external_directory", "resource": "*", "effect": "ask" },
+        {
+          "action": "external_directory",
+          "resource": "/tmp",
           "effect": "allow",
         },
         { "action": "subagent", "resource": "*", "effect": "deny" },
