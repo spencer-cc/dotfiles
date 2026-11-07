@@ -16,6 +16,7 @@ let manpath_additions = [
   "/opt/homebrew/share/man"
   "/run/current-system/sw/share/man"
   $"($env.HOME)/.local/state/nix/profiles/home-manager/home-path/share/man"
+  "/etc/profiles/per-user/($env.USER? | default '')/share/man"
   $"($env.HOME)/.local/state/nix/profiles/profile/share/man"
   $"($env.HOME)/.nix-profile/share/man"
   $"($env.HOME)/.local/share/man"
