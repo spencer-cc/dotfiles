@@ -1,0 +1,43 @@
+# Development packages: toolchains, LSPs, formatters, docs
+# Install: just brew install dev
+
+# Toolchains (global; per-project versions via nix develop if ever needed)
+brew "python3"
+brew "uv"
+brew "pipx"
+brew "nodejs"
+brew "go"
+brew "rustup"
+brew "llvm"
+
+# Git/GitHub extras
+brew "gh"
+brew "pre-commit"
+
+# Docs & data
+brew "pandoc"
+brew "jc"
+brew "groff"
+brew "tdf"
+
+# Formatting/linting (LSPs, formatters — system-installed, not via Mason)
+brew "shellcheck"
+brew "shfmt"
+brew "stylua"
+brew "prettier"
+brew "lua-language-server"
+brew "taplo"
+brew "tree-sitter"
+
+# Media / files
+brew "imagemagick"
+brew "exiftool"
+brew "catimg"
+brew "poppler"
+brew "isync"
+brew "libxcrypt"
+brew "binutils"
+
+# Misc dev
+brew "hyperfine"
+brew "figlet"

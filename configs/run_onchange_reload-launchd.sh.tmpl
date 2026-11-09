@@ -1,0 +1,47 @@
+#!/bin/bash
+{{- /*
+Reload launchd user agents from ~/.config/launchd (managed here) into
+~/Library/LaunchAgents. Re-runs whenever any plist changes (hash below).
+Replaces nix-darwin launchd.user.agents management.
+*/}}
+{{- $plists := list
+    "dot_config/launchd/io.github.felixkratz.sketchybar.plist.tmpl"
+    "dot_config/launchd/com.github.nikitabobko.aerospace.plist.tmpl"
+    "dot_config/launchd/io.github.felixkratz.borders.plist.tmpl"
+    "dot_config/launchd/md.obsidian.plist.tmpl"
+    "dot_config/launchd/local.dir-tidy.plist.tmpl"
+-}}
+{{- range $plists -}}
+# {{ . }}: {{ includeTemplate . $ | sha256sum }}
+{{ end -}}
+# Sync launchd agents and restart changed services
+set -euo pipefail
+
+uid="$(id -u)"
+src="$HOME/.config/launchd"
+dst="$HOME/Library/LaunchAgents"
+mkdir -p "$dst"
+
+shopt -s nullglob
+for plist in "$src"/*.plist; do
+    name="$(basename "$plist")"
+    label="${name%.plist}"
+    cp -f "$plist" "$dst/$name"
+    launchctl bootout "gui/$uid/$label" 2>/dev/null || true
+    # bootout is async — wait for teardown, re-enable, then bootstrap with retries
+    for i in 1 2 3 4 5; do
+        launchctl print "gui/$uid/$label" >/dev/null 2>&1 || break
+        sleep 1
+    done
+    launchctl enable "gui/$uid/$label"
+    ok=""
+    for i in 1 2 3; do
+        if launchctl bootstrap "gui/$uid" "$dst/$name" 2>/dev/null; then ok=1; break; fi
+        sleep 1
+    done
+    if [ -z "$ok" ]; then
+        echo "failed to load: $label" >&2
+        exit 1
+    fi
+    echo "loaded: $label"
+done

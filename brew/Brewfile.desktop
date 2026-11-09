@@ -1,0 +1,47 @@
+# Desktop packages: GUI apps, window management, hardware tools
+# Install: just brew install desktop
+
+# ---- Taps ----
+tap "domcyrus/rustnet"
+tap "felixkratz/formulae"
+tap "nikitabobko/tap"
+tap "philocalyst/tap"
+tap "protonpass/tap"
+
+# ---- Window management & bar (launchd services, plists in configs) ----
+brew "felixkratz/formulae/sketchybar"
+brew "felixkratz/formulae/borders"
+cask "font-sketchybar-app-font"
+
+# ---- Casks (GUI apps) ----
+cask "nikitabobko/tap/aerospace"
+cask "alcove"
+cask "apparency"
+cask "betterdisplay"
+cask "caffeine"
+cask "discord"
+cask "docker-desktop"
+cask "ghostty"
+cask "helium-browser"
+cask "karabiner-elements"
+cask "mactex-no-gui"
+cask "obsidian"
+cask "proton-mail"
+cask "proton-pass"
+cask "protonvpn"
+cask "raspberry-pi-imager"
+cask "raycast"
+cask "shottr"
+cask "stremio"
+cask "transmission"
+cask "vlc"
+cask "zen"
+
+# ---- Misc CLI ----
+brew "pngpaste"
+# yubikey-manager (ykman): no longer in homebrew — install via: pipx install yubikey-manager
+brew "yubico-piv-tool"
+brew "libfido2"
+brew "domcyrus/rustnet/rustnet"
+brew "philocalyst/tap/caligula"
+brew "protonpass/tap/pass-cli"

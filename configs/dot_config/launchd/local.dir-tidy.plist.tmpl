@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>local.dir-tidy</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/bin/nu</string>
+        <string>--no-config-file</string>
+        <string>{{ .chezmoi.homeDir }}/dotfiles/scripts/dir-tidy.nu</string>
+    </array>
+    <!-- Nightly trash of files older than 30 days in ~/Downloads;
+         missed 3:00 AM runs fire on wake (launchd catch-up) -->
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict>
+            <key>Hour</key>
+            <integer>3</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>HOME</key>
+        <string>{{ .chezmoi.homeDir }}</string>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>{{ .chezmoi.homeDir }}/Library/Logs/dir-tidy.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ .chezmoi.homeDir }}/Library/Logs/dir-tidy.err</string>
+</dict>
+</plist>

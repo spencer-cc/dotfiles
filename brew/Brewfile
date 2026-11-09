@@ -1,48 +1,46 @@
-# Brewfile for non-Nix machines (e.g., university Linux via Linuxbrew)
-# Minimal: only packages needed to run configs at default level (non-macOS)
-# Prefer Nix (`just pack deploy default`) when available.
-# System-provided packages (git, bash, curl, wget, less, openssh) are not listed.
+# Core packages: shell, configs tooling, essential CLI, fonts
+# Groups: Brewfile (core) | Brewfile.dev | Brewfile.desktop | Brewfile.security
+# Install: just brew install [core|dev|desktop|security|all]
+# System-provided (curl, less, openssh) are not listed.
 
-tap "homebrew/bundle"
-
-# Shell
+# Shell & prompt
 brew "nushell"
+brew "bash"
 brew "starship"
 brew "zoxide"
 brew "carapace"
 
-# Fonts
-brew "font-jetbrains-mono-nerd-font"
+# Config/deploy tooling
+brew "chezmoi"
+brew "just"
 
-# Editors
+# Editors & git
 brew "neovim"
 brew "lazygit"
+brew "vim"
+brew "git"
+brew "git-delta"
 
-# Core CLI (not typically pre-installed)
-brew "chezmoi"
+# Core CLI
+brew "coreutils"
+brew "wget"
+brew "rsync"
 brew "tree"
 brew "bat"
 brew "eza"
-
-# Development
-brew "python3"
-brew "nodejs"
-brew "gcc"
-brew "shfmt"
-brew "just"
 brew "ripgrep"
 brew "fd"
 brew "fzf"
+brew "jq"
+brew "dust"
+brew "glow"
+brew "telnet"
+brew "whois"
 
-# TUI
+# TUI / monitoring
 brew "btop"
 brew "zellij"
 
-# Dev tools (LSP, formatters, linters — system-installed, not via Mason)
-brew "tree-sitter"
-brew "pre-commit"
-brew "git-delta"
-brew "lua-language-server"
-brew "stylua"
-brew "prettier"
-brew "groff"
+# Fonts
+cask "font-jetbrains-mono-nerd-font"
+cask "font-space-mono-nerd-font"

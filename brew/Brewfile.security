@@ -1,0 +1,10 @@
+# Security/forensics toolkit (optional)
+# Install: just brew install security
+
+brew "nmap"
+brew "wireshark"
+cask "wireshark-app"
+brew "hashcat"
+brew "ghidra"
+brew "ophcrack"
+brew "binwalk"
