@@ -29,7 +29,7 @@ The user uses `nushell` as their primary shell. You have access to bash for tool
 
 ## Config Location
 
-`~/dotfiles/nushell.pkd/.config/nushell/`
+`~/dotfiles/configs/dot_config/nushell/` (chezmoi source — deployed to `~/.config/nushell/`)
 
 ## Common Operations
 

@@ -36,6 +36,7 @@ brew "dust"
 brew "glow"
 brew "telnet"
 brew "whois"
+brew "openssh"
 
 # TUI / monitoring
 brew "btop"

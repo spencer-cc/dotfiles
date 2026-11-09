@@ -49,5 +49,4 @@ just sys touchid     # Touch ID for sudo
 - [Setup](./docs/setup.md) - Initial installation
 - [Packages & System](./docs/packages.md) - Brewfile groups, launchd services, macOS defaults
 - [Colorscheme](./docs/colorscheme.md) - Color palette reference and theme switching
-- [Migration to Chezmoi](./docs/migration-to-chezmoi.md) - Architecture details
 - [Yubikey](./docs/yubikey.md) - Yubikey setup and SSH usage

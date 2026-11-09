@@ -39,7 +39,6 @@ cask "zen"
 
 # ---- Misc CLI ----
 brew "pngpaste"
-# yubikey-manager (ykman): no longer in homebrew — install via: pipx install yubikey-manager
 brew "yubico-piv-tool"
 brew "libfido2"
 brew "domcyrus/rustnet/rustnet"
