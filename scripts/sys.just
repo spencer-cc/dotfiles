@@ -1,5 +1,8 @@
 # System setup tasks (macOS)
 
+_default:
+    @just --unsorted --list sys
+
 # Enable Touch ID for sudo (idempotent; writes /etc/pam.d/sudo_local)
 [group('sys')]
 touchid:

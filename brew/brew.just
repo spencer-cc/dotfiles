@@ -1,29 +1,32 @@
 # Package management via Homebrew (Brewfiles: core, dev, desktop, security)
 # NOTE: recipes run with cwd = this module's dir (brew/), so relative paths work.
 
+_default:
+    @just --unsorted --list brew
+
 _brewfile group:
     #!/usr/bin/env bash
     set -euo pipefail
-    case "{{group}}" in
+    case "{{ group }}" in
         core)     echo "./Brewfile" ;;
         dev)      echo "./Brewfile.dev" ;;
         desktop)  echo "./Brewfile.desktop" ;;
         security) echo "./Brewfile.security" ;;
-        *) echo "unknown group '{{group}}' (core|dev|desktop|security)" >&2; exit 1 ;;
+        *) echo "unknown group '{{ group }}' (core|dev|desktop|security)" >&2; exit 1 ;;
     esac
 
-# Install packages: group = core|dev|desktop|security|all (default: all)
+# Install packages: group = core|dev|desktop|security|all
 [group('pack')]
 install group="all":
     #!/usr/bin/env bash
     set -euo pipefail
-    if [ "{{group}}" = "all" ]; then
+    if [ "{{ group }}" = "all" ]; then
         for f in ./Brewfile ./Brewfile.dev ./Brewfile.desktop ./Brewfile.security; do
             echo "==> brew bundle install --file=$f"
             brew bundle install --file="$f"
         done
     else
-        f="$(just brew _brewfile {{group}})"
+        f="$(just brew _brewfile {{ group }})"
         echo "==> brew bundle install --file=$f"
         brew bundle install --file="$f"
     fi
@@ -33,13 +36,13 @@ install group="all":
 update group="all":
     #!/usr/bin/env bash
     set -euo pipefail
-    if [ "{{group}}" = "all" ]; then
+    if [ "{{ group }}" = "all" ]; then
         for f in ./Brewfile ./Brewfile.dev ./Brewfile.desktop ./Brewfile.security; do
             echo "==> brew bundle update --file=$f"
             brew bundle update --file="$f"
         done
     else
-        f="$(just brew _brewfile {{group}})"
+        f="$(just brew _brewfile {{ group }})"
         echo "==> brew bundle update --file=$f"
         brew bundle update --file="$f"
     fi
@@ -59,10 +62,10 @@ list:
 check group="all":
     #!/usr/bin/env bash
     set -euo pipefail
-    if [ "{{group}}" = "all" ]; then
+    if [ "{{ group }}" = "all" ]; then
         files="./Brewfile ./Brewfile.dev ./Brewfile.desktop ./Brewfile.security"
     else
-        files="$(just brew _brewfile {{group}})"
+        files="$(just brew _brewfile {{ group }})"
     fi
     for f in $files; do
         echo "==> $f"
