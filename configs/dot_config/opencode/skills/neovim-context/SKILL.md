@@ -5,26 +5,29 @@ description: Neovim configuration details including plugin management and langua
 
 ## Config Location
 
-`~/dotfiles/neovim.pkd/.config/nvim/`
+`~/dotfiles/configs/dot_config/nvim/` (chezmoi source; deployed to `~/.config/nvim/` by `just dot apply`)
 
 ## Gaining Context
 
-**ALWAYS read these READMEs when working with this config:**
+**ALWAYS read this README when working with this config:**
 
-1. `~/dotfiles/neovim.pkd/.config/nvim/README.md` - Overview of plugins, UI, navigation, and language tooling
-2. `~/dotfiles/neovim.pkd/.config/nvim/lua/lang-system/README.md` - Language system documentation
+1. `~/dotfiles/configs/dot_config/nvim/README.md` - Overview of plugins, UI, navigation, and language tooling
 
 ## Structure
 
 ```
+init.lua               # Entry point
 lua/
-├── plugins/           # lazy.nvim plugin specs
-│   └── lang-system.lua  # Language definitions
+├── core/              # options, keymaps, autocmds, filetypes
+├── colorscheme/       # palette (chezmoi-templated)
+├── helpers/           # shared utilities
 ├── lang-system/       # Language tool management
-│   ├── init.lua       # Entry point; sets up Mason, treesitter, LSP, null-ls
-│   ├── languages.lua  # Helper functions and public API
-│   └── mappings.lua   # LSP/formatter/linter → Mason package mappings
-└── ...
+│   ├── init.lua       # Entry point; :LanguageInstall etc.; sets up Mason, treesitter, LSP
+│   ├── lsp_actions.lua
+│   └── plugin/init.lua
+└── plugins/           # lazy.nvim plugin specs
+    ├── lang-system.lua  # Language definitions (declarative table)
+    ├── theme.lua, markdown/, snacks/, ui/, ux/
 ```
 
 ## Plugin Management

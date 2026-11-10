@@ -1,0 +1,18 @@
+# network
+brew "nmap"
+brew "wireshark"
+cask "wireshark-app"
+
+# secret scanning
+brew "trufflehog"
+brew "titus"
+
+# password cracking
+brew "aircrack-ng"
+brew "hashcat"
+brew "john-jumbo"
+brew "ophcrack"
+
+# binary stuff
+brew "ghidra"
+brew "binwalk"

@@ -1,0 +1,31 @@
+# Toolchains
+brew "python3"
+brew "uv"
+brew "pipx"
+brew "nodejs"
+brew "go"
+brew "rustup"
+brew "llvm"
+
+# Git extras
+brew "pre-commit"
+
+# Docs & data
+brew "pandoc"
+brew "jc"
+brew "groff"
+brew "tdf"
+
+# Formatting/linting
+brew "shellcheck"
+brew "shfmt"
+brew "stylua"
+brew "prettier"
+brew "lua-language-server"
+brew "taplo"
+brew "tree-sitter"
+
+# misc
+brew "poppler"
+brew "libxcrypt"
+brew "binutils"

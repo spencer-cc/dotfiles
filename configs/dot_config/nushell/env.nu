@@ -1,19 +1,5 @@
 # ----- Env Variables -----
 
-# Nix profiles — prepend so Nix-managed packages take priority
-# ~/.nix-profile/bin: default `nix profile` / standalone HM
-# darwin: nix-darwin embedded HM installs to /etc/profiles/per-user/$USER/bin
-# linux:  standalone HM uses ~/.local/state/nix/profiles/home-manager/home-path/bin
-$env.PATH = if $nu.os-info.name == "macos" {
-  $env.PATH
-  | prepend "/etc/profiles/per-user/($env.USER)/bin"
-  | prepend $"($env.home)/.nix-profile/bin"
-} else {
-  $env.PATH
-  | prepend $"($env.home)/.local/state/nix/profiles/home-manager/home-path/bin"
-  | prepend $"($env.home)/.nix-profile/bin"
-}
-
 $env.LESS = "-R -f"
 $env.LESSKEYIN = $"($env.home)/.config/lesskey"
 

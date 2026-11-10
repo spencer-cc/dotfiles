@@ -9,10 +9,11 @@ A single file (`.chezmoidata/colors.toml`) defines all colors. All tool configs 
 Theme files live in `configs/themes/`. Each is a complete `colors.toml` with all sections filled in.
 
 ```bash
-just dot theme catppuccin-mocha
+cp configs/themes/catppuccin-mocha.toml configs/.chezmoidata/colors.toml
+just dot apply
 ```
 
-This copies the theme file over `.chezmoidata/colors.toml` and runs `chezmoi apply`.
+Switching is a manual two-step: copy the theme file over `.chezmoidata/colors.toml`, then apply (commit the copied file to make the switch stick).
 
 To create a new theme, copy an existing theme file and modify the hex values.
 
@@ -197,7 +198,7 @@ Prompt-specific colors for starship.
 
 | Key        | Value  |
 | ---------- | ------ |
-| background | `1`    |
+| background | `0.95` |
 | cursor     | `0.85` |
 
 ## NVim / Catppuccin Compatibility
@@ -249,5 +250,5 @@ All 27 colors are overridden per theme, so swapping `colors.toml` changes the en
 | nushell    | `nushell/confs/colors.nu.tmpl`                                        | `palette`, `ui`                                   |
 | nvim       | `nvim/lua/colorscheme/palette.lua.tmpl`, `nvim/lua/plugins/theme.lua` | `palette`, `ui`, `syntax`, `diagnostic`, `diff`   |
 | bat        | `bat/themes/colorscheme.tmTheme.tmpl`                                 | `ui`, `syntax`, `palette`, `markup`, `diagnostic` |
-| borders    | `borders/bordersrc.tmpl`                                              | `ui.accent`, `ui.surface`                         |
-| sketchybar | `sketchybar/config.nu.tmpl`                                           | `palette`, `ui`, `syntax`, `diagnostic`           |
+| borders    | `borders/executable_bordersrc.tmpl`                                   | `ui.accent`, `ui.surface`                         |
+| sketchybar | `sketchybar/executable_config.nu.tmpl`                                | `palette`, `ui`, `syntax`, `diagnostic`           |

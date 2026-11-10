@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>md.obsidian</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Applications/Obsidian.app/Contents/MacOS/Obsidian</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <!-- No KeepAlive: if Obsidian crashes or is quit, it stays closed until next reload/login -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>HOME</key>
+        <string>{{ .chezmoi.homeDir }}</string>
+    </dict>
+</dict>
+</plist>

@@ -5,13 +5,13 @@ _default:
 [group('dot')]
 mod dot 'configs/dot.just'
 
-# Packages: Nix commands (deploy, build, rollback, etc.)
-[group('pack')]
-mod pack 'nix/nix.just'
-
-# Brew: fallback package installation
+# Brew: package management (Brewfiles: core, dev, desktop, security)
 [group('pack')]
 mod brew 'brew/brew.just'
+
+# System setup tasks (Touch ID sudo, etc.)
+[group('sys')]
+mod sys 'scripts/sys.just'
 
 # Neovim configuration tasks
 [group('tools')]

@@ -1,23 +1,24 @@
 ---
 name: dotfiles-context
-description: CRITICAL - Load for config file or package operations in the dotfiles repo. Covers chezmoi source paths (~/.config/* → ~/dotfiles/configs/), the Nix package/profile system, and deployment commands.
+description: CRITICAL - Load for config file or package operations in the dotfiles repo. Covers chezmoi source paths (~/.config/* → ~/dotfiles/configs/), the categorized Homebrew Brewfile system, launchd services, and macOS defaults.
 ---
+
+# Skill: dotfiles-context
 
 ## Architecture
 
-The dotfiles use a decoupled three-layer architecture. Never mix concerns between layers:
+The dotfiles use a decoupled two-layer architecture. Never mix concerns between layers:
 
-| Layer    | Tool                            | Scope                                                 | Source                |
-| -------- | ------------------------------- | ----------------------------------------------------- | --------------------- |
-| Configs  | chezmoi                         | Tool config files, templating, colorscheme            | `~/dotfiles/configs/` |
-| Packages | Nix (Home Manager + nix-darwin) | CLI packages, fonts; macOS system settings + services | `~/dotfiles/nix/`     |
-| Fallback | Homebrew (`Brewfile`)           | Packages on machines without Nix                      | `~/dotfiles/brew/`    |
+| Layer    | Tool     | Scope                                                                      | Source                |
+| -------- | -------- | -------------------------------------------------------------------------- | --------------------- |
+| Configs  | chezmoi  | Tool config files, templating, colorscheme, launchd plists, macOS defaults | `~/dotfiles/configs/` |
+| Packages | Homebrew | CLI packages, fonts, casks — grouped into categorized Brewfiles            | `~/dotfiles/brew/`    |
 
 Invariants:
 
-- Packages are managed **only** in `nix/profiles/*.nix` — never added to chezmoi configs
-- Home Manager profiles are **packages only** — no config files, no activation hooks (chezmoi owns configs)
-- macOS system settings, launchd services, and brew casks live in nix-darwin modules (`nix/darwin/`)
+- Packages are managed **only** in `brew/Brewfile*` — never added to chezmoi configs
+- chezmoi owns configs, launchd plists (`configs/dot_config/launchd/`), and the macOS defaults script (`configs/run_onchange_mac-defaults.sh.tmpl`)
+- Homebrew manages everything, including GUI apps (casks), fonts, and services — nix does not exist on this machine; never suggest nix commands
 
 ## Dotfiles Structure (chezmoi layer)
 
@@ -29,8 +30,13 @@ All configuration files are managed with **chezmoi**. The source directory is `~
 - **Deployed to**: `~/.config/<tool>/` (and `~/dot_<file>` maps to `~/.<file>`)
 - **Templates**: Files with `.tmpl` extension are Go templates processed by chezmoi
 - **Data**: `~/dotfiles/configs/.chezmoidata/*.toml` provides template variables (`.colors.*` etc.)
-- **Platform exclusion**: macOS-only tools are excluded on Linux via `.chezmoiignore.tmpl`
-- **Discovery**: List `~/dotfiles/configs/dot_config/` (plus top-level `dot_*` files in `configs/`) to see which tools are currently managed — the tool set evolves, so don't assume from memory
+- **run_onchange scripts**: `configs/run_onchange_*.sh.tmpl` — executed by chezmoi on apply when their content (including plist hashes) changes: macOS defaults + launchd service reload
+- **launchd plists**: `configs/dot_config/launchd/<label>.plist.tmpl` — deployed to `~/.config/launchd/`, synced to `~/Library/LaunchAgents` by the reload script (labels: `io.github.felixkratz.sketchybar`, `com.github.nikitabobko.aerospace`, `io.github.felixkratz.borders`, `md.obsidian`, `local.dir-tidy`)
+- **Discovery**: List `~/dotfiles/configs/dot_config/` (plus top-level `dot_*` and `run_*` files in `configs/`) to see what is currently managed — the tool set evolves, so don't assume from memory
+
+### Pattern exception: macOS defaults
+
+System settings live in `configs/run_onchange_mac-defaults.sh.tmpl` (idempotent `defaults write`). To change a macOS setting, edit that script and `just dot apply` — do NOT use System Settings (next apply reverts GUI changes). Menu bar/trackpad changes need logout.
 
 ### File Operations Rule
 
@@ -45,39 +51,48 @@ All configuration files are managed with **chezmoi**. The source directory is `~
 The per-tool inventory changes over time, so treat this as a discovery step, not a memorized list:
 
 ```bash
-ls ~/dotfiles/configs/              # top-level dot_* files + dot_config/
+ls ~/dotfiles/configs/              # top-level dot_*, run_onchange_* files + dot_config/
 ls ~/dotfiles/configs/dot_config/   # per-tool config directories
 cat ~/dotfiles/configs/.chezmoiignore.tmpl   # platform exclusions
 ```
 
 ### Chezmoi
 
-Configs are deployed with chezmoi using `just dot apply` which runs `chezmoi apply --source ~/dotfiles/configs --force --keep-going`. The `dot_` prefix in source filenames maps to a dot in the deployed path (e.g., `dot_config` -> `.config`, `dot_bashrc` -> `.bashrc`).
+Configs are deployed with chezmoi using `just dot apply` which runs `chezmoi apply --source ~/dotfiles/configs --force --keep-going`. The `dot_` prefix in source filenames maps to a dot in the deployed path (e.g., `dot_config` -> `.config`).
 
-## Nix (packages layer)
+## Packages (Homebrew layer)
 
-- **Flake entry**: `~/dotfiles/nix/flake.nix`; machine identity (`username`, `system`) in `nix/variables.nix` — edit per machine before deploying to a new host
-- **Profiles**: `nix/profiles/*.nix` are Home Manager package sets, layered via `imports` (a base profile is imported by extended ones). Discover the current profiles by reading the directory — the set evolves
-- **macOS**: the whole system (packages + system settings + services) deploys via the nix-darwin configuration; modules in `nix/darwin/` (`system.nix`, `services.nix`, `brew.nix`). Determinate manages Nix itself, not nix-darwin (`nix.enable = false`)
-- **Linux**: deploys evaluate with `--impure` so the flake picks up `USER` and platform from the environment — no per-machine file edits. macOS uses pure eval via `variables.nix`
+Packages are grouped into categorized Brewfiles so a new machine doesn't need everything at once:
+
+| File                     | Contents                                                |
+| ------------------------ | ------------------------------------------------------- |
+| `brew/Brewfile`          | Core: shell, config tooling, essential CLI, fonts       |
+| `brew/Brewfile.dev`      | Toolchains (python/node/go/rust/llvm), LSPs, formatters |
+| `brew/Brewfile.desktop`  | GUI casks, sketchybar/aerospace, yubikey tools, taps    |
+| `brew/Brewfile.security` | Optional forensics toolkit (nmap, hashcat, ghidra, ...) |
 
 ### Workflow
 
-- Add a package: edit the relevant `nix/profiles/<profile>.nix`, then `just pack deploy <profile>`
-- Deploy/build/rollback commands: run `just pack --list` or read `nix/nix.just` (recipes evolve; don't rely on memorized lists)
-- On macOS the profile argument is ignored — nix-darwin manages everything via the `<username>-mac` flake key; `mac` is accepted as a no-op alias
+- Add a package: edit the relevant `brew/Brewfile*` (pick the right group), then `just brew install <group>`
+- `just brew install` (no arg) = all groups; `just brew update|check|list` also support groups
+- `brew bundle install` is idempotent and upgrades outdated entries
 
-## Brew fallback
+### Special cases
 
-`just brew install|update|list` against `~/dotfiles/brew/Brewfile` — for machines without Nix (e.g., university Linux). If you add a tool to a Nix profile that should also exist on non-Nix machines, add it to the Brewfile too.
+- Per-project toolchain versions are out of scope — Brewfiles install global toolchains only (a version manager like `mise` would be the fallback, never nix)
+
+## System tasks
+
+- `just sys touchid` — enable Touch ID for sudo (writes `/etc/pam.d/sudo_local`, needs sudo)
+- `just dot apply` — re-applies defaults + reloads changed launchd services
 
 ## Commands
 
-Justfile modules are defined in `~/dotfiles/.justfile`: `dot` (chezmoi), `pack` (nix), `brew` (fallback), plus tool modules (`nvim`, `skbar`). Run `just --list` / `just <mod> --list` for current recipes — this document intentionally does not enumerate them, as they change often.
+Justfile modules are defined in `~/dotfiles/.justfile`: `dot` (chezmoi), `brew` (packages), `sys` (system tasks), plus tool modules (`nvim`, `skbar`). Run `just --list` / `just <mod> --list` for current recipes — this document intentionally does not enumerate them, as they change often.
 
 ## Colorscheme
 
-Theme colors come from `~/dotfiles/configs/.chezmoidata/colors.toml` (the active theme). Theme files live in `~/dotfiles/configs/themes/`. Switch themes with `just dot theme <name>`.
+Theme colors come from `~/dotfiles/configs/.chezmoidata/colors.toml` (the active theme). Theme files live in `~/dotfiles/configs/themes/`. To switch themes, copy a theme file over `colors.toml` and run `just dot apply` (no recipe exists for this — it is a rare manual operation).
 
 ### Token Structure
 
@@ -96,6 +111,9 @@ This skill is itself part of the dotfiles repo. Its canonical source is `~/dotfi
 ### Deeper documentation
 
 - `~/dotfiles/README.md` — architecture overview and quick start
-- `~/dotfiles/docs/dotfiles-nix.md` — deploy commands, editing, rollback
+- `~/dotfiles/docs/packages.md` — Brewfile groups, launchd services, macOS defaults
 - `~/dotfiles/docs/setup.md` — initial installation
 - `~/dotfiles/docs/colorscheme.md` — full color token reference
+
+Base directory for this skill: /Users/scc/.config/opencode/skills/dotfiles-context
+Relative paths in `scripts/`, `reference/` are relative to this base directory.

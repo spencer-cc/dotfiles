@@ -5,7 +5,7 @@ description: PDF text extraction and OCR using pdftotext, pdftoppm, tesseract, a
 
 ## Tools
 
-All tools are from Poppler (`brew install poppler`) and Tesseract (`brew install tesseract tesseract-lang`).
+All tools come from Homebrew: Poppler (`brew "poppler"` in `Brewfile.dev`) and Tesseract (`brew install tesseract tesseract-lang` — installed ad-hoc, not tracked in a Brewfile).
 
 | Tool        | Purpose                                |
 | ----------- | -------------------------------------- |

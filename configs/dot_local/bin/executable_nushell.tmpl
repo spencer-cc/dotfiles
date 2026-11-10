@@ -1,0 +1,4 @@
+#!/bin/sh -l
+export XDG_CONFIG_HOME="$HOME/.config"
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+exec nu --experimental-options='native-clip' "$@"
