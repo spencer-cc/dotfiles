@@ -15,7 +15,6 @@ The user uses `nushell` as their primary shell. You have access to bash for tool
 - **DO NOT** waste time investigating how files in the `autoload` directory are loaded
 - Other files autoloaded by nushell:
   - `config.nu`
-  - `login.nu` (only if session has been set as a login session)
   - `env.nu`
 
 ## Documentation Resources

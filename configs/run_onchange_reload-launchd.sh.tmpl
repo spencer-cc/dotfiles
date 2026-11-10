@@ -4,15 +4,17 @@ Reload launchd user agents from ~/.config/launchd (managed here) into
 ~/Library/LaunchAgents. Re-runs whenever any plist changes (hash below).
 Replaces nix-darwin launchd.user.agents management.
 */}}
-{{- $plists := list
-    "dot_config/launchd/io.github.felixkratz.sketchybar.plist.tmpl"
-    "dot_config/launchd/com.github.nikitabobko.aerospace.plist.tmpl"
-    "dot_config/launchd/io.github.felixkratz.borders.plist.tmpl"
-    "dot_config/launchd/md.obsidian.plist.tmpl"
-    "dot_config/launchd/local.dir-tidy.plist.tmpl"
--}}
-{{- range $plists -}}
-# {{ . }}: {{ includeTemplate . $ | sha256sum }}
+{{- /* Hash lines are derived from the source tree: adding a plist template to
+dot_config/launchd/ automatically adds its hash here and triggers a reload.
+No manual list maintenance required. */}}
+{{- $modrel := trimAll "/" (trimPrefix .chezmoi.homeDir .chezmoi.sourceDir) -}}
+{{- $files := glob (printf "%s/dot_config/launchd/*.plist.tmpl" $modrel) -}}
+{{- if not $files -}}
+# WARNING: plist glob came up empty — reload triggers are disabled. Check sourceDir.
+{{- end -}}
+{{- range $files -}}
+{{- $src := trimPrefix (printf "%s/" $modrel) . -}}
+# {{ $src }}: {{ includeTemplate $src $ | sha256sum }}
 {{ end -}}
 # Sync launchd agents and restart changed services
 set -euo pipefail

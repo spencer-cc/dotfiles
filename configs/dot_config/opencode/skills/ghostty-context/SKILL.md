@@ -5,7 +5,7 @@ description: Ghostty terminal emulator configuration
 
 ## Config Location
 
-`~/dotfiles/ghostty.pkd/.config/ghostty/`
+`~/dotfiles/configs/dot_config/ghostty/` (chezmoi source; deployed to `~/.config/ghostty/` by `just dot apply`)
 
 ## Documentation
 

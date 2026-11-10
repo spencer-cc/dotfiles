@@ -31,8 +31,7 @@ just brew list                 # list tracked packages
 
 Notes:
 
-- `yubikey-manager` (ykman) is not in homebrew anymore: `pipx install yubikey-manager`
-- Per-project toolchain versions: use a project-local flake and `nix develop` if ever needed
+- Brewfiles install global toolchains only; per-project version pinning is out of scope (a version manager like `mise` would be the fallback)
 
 ## New Machine Setup
 
@@ -67,7 +66,7 @@ Some settings (menu bar, trackpad) require logout to take effect.
 
 ## Launchd Services
 
-Services are defined as plists in `configs/dot_config/launchd/` (labeled: sketchybar, aerospace, jankyborders, obsidian, dir-tidy). On `just dot apply`, a `run_onchange` script syncs them to `~/Library/LaunchAgents` and restarts changed services.
+Services are defined as plists in `configs/dot_config/launchd/` (labels: `io.github.felixkratz.sketchybar`, `com.github.nikitabobko.aerospace`, `io.github.felixkratz.borders`, `md.obsidian`, `local.dir-tidy`). On `just dot apply`, a `run_onchange` script syncs them to `~/Library/LaunchAgents` and restarts changed services.
 
 ```bash
 launchctl list | grep -Ei 'aerospace|sketchybar|borders|obsidian|dir-tidy'

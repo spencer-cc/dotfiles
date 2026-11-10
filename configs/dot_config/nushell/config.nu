@@ -19,7 +19,7 @@ $env.config = {
   recursion_limit: 100 # max recursion depth before killing process
 
   # ----- Commandline Editor Settings -----
-  buffer_editor: ["nvim"] # add arguments as other elements
+  # buffer_editor unset: nushell falls back to EDITOR (set in env.nu when nvim exists)
   edit_mode: "emacs" # emacs or vi
   cursor_shape: {emacs: "block", vi_insert: "line", vi_normal: "block"}
 

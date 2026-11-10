@@ -8,7 +8,7 @@ Personal dotfiles using a decoupled architecture: **chezmoi** for config deploym
 dotfiles/
 ├── configs/                # Chezmoi source dir (config files + templates)
 │   ├── .chezmoidata/       # Static data (colors.toml — active theme)
-│   ├── themes/             # Theme files (catppuccin-mocha, circadia-dark-classic)
+│   ├── themes/             # Theme files (catppuccin-mocha)
 │   ├── dot_config/         # Tool configs (nvim, nushell, ghostty, git, etc.)
 │   ├── dot_config/launchd/ # launchd service plists (sketchybar, aerospace, ...)
 │   ├── run_onchange_mac-defaults.sh   # macOS system defaults (applied on change)
@@ -39,7 +39,6 @@ just sys touchid     # Touch ID for sudo
 | Command                 | Description                                      |
 | ----------------------- | ------------------------------------------------ |
 | `just dot apply`        | Deploy configs + defaults + services             |
-| `just dot theme <name>` | Switch colorscheme theme                         |
 | `just brew install`     | Install all package groups                       |
 | `just brew install dev` | Install one group (core\|dev\|desktop\|security) |
 | `just sys touchid`      | Enable Touch ID for sudo                         |

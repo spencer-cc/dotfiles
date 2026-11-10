@@ -18,7 +18,7 @@ Invariants:
 
 - Packages are managed **only** in `brew/Brewfile*` — never added to chezmoi configs
 - chezmoi owns configs, launchd plists (`configs/dot_config/launchd/`), and the macOS defaults script (`configs/run_onchange_mac-defaults.sh.tmpl`)
-- Homebrew GUI apps/services that nix can't manage don't exist — brew manages everything
+- Homebrew manages everything, including GUI apps (casks), fonts, and services — nix does not exist on this machine; never suggest nix commands
 
 ## Dotfiles Structure (chezmoi layer)
 
@@ -31,12 +31,12 @@ All configuration files are managed with **chezmoi**. The source directory is `~
 - **Templates**: Files with `.tmpl` extension are Go templates processed by chezmoi
 - **Data**: `~/dotfiles/configs/.chezmoidata/*.toml` provides template variables (`.colors.*` etc.)
 - **run_onchange scripts**: `configs/run_onchange_*.sh.tmpl` — executed by chezmoi on apply when their content (including plist hashes) changes: macOS defaults + launchd service reload
-- **launchd plists**: `configs/dot_config/launchd/<label>.plist.tmpl` — deployed to `~/.config/launchd/`, synced to `~/Library/LaunchAgents` by the reload script (labels: sketchybar, aerospace, jankyborders, obsidian, dir-tidy)
+- **launchd plists**: `configs/dot_config/launchd/<label>.plist.tmpl` — deployed to `~/.config/launchd/`, synced to `~/Library/LaunchAgents` by the reload script (labels: `io.github.felixkratz.sketchybar`, `com.github.nikitabobko.aerospace`, `io.github.felixkratz.borders`, `md.obsidian`, `local.dir-tidy`)
 - **Discovery**: List `~/dotfiles/configs/dot_config/` (plus top-level `dot_*` and `run_*` files in `configs/`) to see what is currently managed — the tool set evolves, so don't assume from memory
 
 ### Pattern exception: macOS defaults
 
-System settings live in `configs/run_onchange_mac-defaults.sh` (idempotent `defaults write`). To change a macOS setting, edit that script and `just dot apply` — do NOT use System Settings (next apply reverts GUI changes). Menu bar/trackpad changes need logout.
+System settings live in `configs/run_onchange_mac-defaults.sh.tmpl` (idempotent `defaults write`). To change a macOS setting, edit that script and `just dot apply` — do NOT use System Settings (next apply reverts GUI changes). Menu bar/trackpad changes need logout.
 
 ### File Operations Rule
 
@@ -79,8 +79,7 @@ Packages are grouped into categorized Brewfiles so a new machine doesn't need ev
 
 ### Special cases
 
-- `yubikey-manager` (ykman) is not in homebrew — install via `pipx install yubikey-manager`
-- Per-project toolchain versions belong in project-local nix flakes (`nix develop`), not the Brewfile
+- Per-project toolchain versions are out of scope — Brewfiles install global toolchains only (a version manager like `mise` would be the fallback, never nix)
 
 ## System tasks
 
@@ -93,7 +92,7 @@ Justfile modules are defined in `~/dotfiles/.justfile`: `dot` (chezmoi), `brew` 
 
 ## Colorscheme
 
-Theme colors come from `~/dotfiles/configs/.chezmoidata/colors.toml` (the active theme). Theme files live in `~/dotfiles/configs/themes/`. Switch themes with `just dot theme <name>`.
+Theme colors come from `~/dotfiles/configs/.chezmoidata/colors.toml` (the active theme). Theme files live in `~/dotfiles/configs/themes/`. To switch themes, copy a theme file over `colors.toml` and run `just dot apply` (no recipe exists for this — it is a rare manual operation).
 
 ### Token Structure
 

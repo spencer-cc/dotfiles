@@ -12,62 +12,42 @@ _brewfile group:
         dev)      echo "./Brewfile.dev" ;;
         desktop)  echo "./Brewfile.desktop" ;;
         security) echo "./Brewfile.security" ;;
-        *) echo "unknown group '{{ group }}' (core|dev|desktop|security)" >&2; exit 1 ;;
+        all)      echo "./Brewfile ./Brewfile.dev ./Brewfile.desktop ./Brewfile.security" ;;
+        *) echo "unknown group '{{ group }}' (core|dev|desktop|security|all)" >&2; exit 1 ;;
     esac
+
+# Run a brew bundle subcommand (install|update|list) over one group or all
+_bundle verb group="all":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    for f in $(just brew _brewfile {{ group }}); do
+        echo "==> brew bundle {{ verb }} --file=$f"
+        brew bundle {{ verb }} --file="$f"
+    done
 
 # Install packages: group = core|dev|desktop|security|all
 [group('pack')]
 install group="all":
-    #!/usr/bin/env bash
-    set -euo pipefail
-    if [ "{{ group }}" = "all" ]; then
-        for f in ./Brewfile ./Brewfile.dev ./Brewfile.desktop ./Brewfile.security; do
-            echo "==> brew bundle install --file=$f"
-            brew bundle install --file="$f"
-        done
-    else
-        f="$(just brew _brewfile {{ group }})"
-        echo "==> brew bundle install --file=$f"
-        brew bundle install --file="$f"
-    fi
+    @just brew _bundle install {{ group }}
 
 # Update brew packages (all groups by default, or one)
 [group('pack')]
 update group="all":
-    #!/usr/bin/env bash
-    set -euo pipefail
-    if [ "{{ group }}" = "all" ]; then
-        for f in ./Brewfile ./Brewfile.dev ./Brewfile.desktop ./Brewfile.security; do
-            echo "==> brew bundle update --file=$f"
-            brew bundle update --file="$f"
-        done
-    else
-        f="$(just brew _brewfile {{ group }})"
-        echo "==> brew bundle update --file=$f"
-        brew bundle update --file="$f"
-    fi
+    @just brew _bundle update {{ group }}
 
 # List packages tracked by the Brewfiles
 [group('pack')]
 list:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    for f in ./Brewfile ./Brewfile.dev ./Brewfile.desktop ./Brewfile.security; do
-        echo "==> $f"
-        brew bundle list --file="$f"
-    done
+    @just brew _bundle list all
 
 # Show missing packages for each Brewfile (all groups by default, or one)
+# Own body (not _bundle): `brew bundle check` exits nonzero on missing packages,
+# which must not abort the remaining files.
 [group('pack')]
 check group="all":
     #!/usr/bin/env bash
     set -euo pipefail
-    if [ "{{ group }}" = "all" ]; then
-        files="./Brewfile ./Brewfile.dev ./Brewfile.desktop ./Brewfile.security"
-    else
-        files="$(just brew _brewfile {{ group }})"
-    fi
-    for f in $files; do
+    for f in $(just brew _brewfile {{ group }}); do
         echo "==> $f"
         brew bundle check --file="$f" || true
     done
