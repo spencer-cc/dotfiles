@@ -39,6 +39,7 @@ cask "zen"
 
 # ---- Misc CLI ----
 brew "pngpaste"
+brew "ykman"
 brew "yubico-piv-tool"
 brew "libfido2"
 brew "domcyrus/rustnet/rustnet"
