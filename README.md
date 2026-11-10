@@ -50,3 +50,4 @@ just sys touchid     # Touch ID for sudo
 - [Packages & System](./docs/packages.md) - Brewfile groups, launchd services, macOS defaults
 - [Colorscheme](./docs/colorscheme.md) - Color palette reference and theme switching
 - [Yubikey](./docs/yubikey.md) - Yubikey setup and SSH usage
+- [Karabiner](./docs/karabiner.md) - Key remapping design and sync workflow
