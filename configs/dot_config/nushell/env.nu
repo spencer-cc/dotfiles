@@ -5,8 +5,9 @@ $env.LESSKEYIN = $"($env.home)/.config/lesskey"
 
 if not (which bat | is-empty) {
   $env.PAGER = "bat"
-  # bat as man pager: strip SGR escapes from man's output so bat can re-highlight with `man` syntax
-  $env.MANPAGER = "sh -c 'sed \"s/\\x1b\\[[0-9;]*m//g\" | bat -l man -p'"
+  # bat as man pager: col -bx resolves overstrikes (mandoc's d\bd bold, _\bc underline);
+  # sed then strips SGR escapes so bat can re-highlight with `man` syntax
+  $env.MANPAGER = "sh -c 'col -bx | sed \"s/\\x1b\\[[0-9;]*m//g\" | bat -l man -p'"
 }
 
 $env.XDG_CONFIG_HOME = $"($env.home)/.config"
