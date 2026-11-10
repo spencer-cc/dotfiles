@@ -2,6 +2,8 @@
 # Install: just brew install security
 
 brew "nmap"
+brew "aircrack-ng"
+brew "trufflehog"
 brew "wireshark"
 cask "wireshark-app"
 brew "hashcat"

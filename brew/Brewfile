@@ -12,6 +12,7 @@ brew "carapace"
 
 # Config/deploy tooling
 brew "chezmoi"
+brew "opencode"
 brew "just"
 
 # Editors & git
