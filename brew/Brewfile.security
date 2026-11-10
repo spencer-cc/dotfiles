@@ -1,14 +1,18 @@
-# Security/forensics toolkit (optional)
-# Install: just brew install security
-
+# network
 brew "nmap"
-brew "aircrack-ng"
-brew "trufflehog"
 brew "wireshark"
 cask "wireshark-app"
+
+# secret scanning
+brew "trufflehog"
+brew "titus"
+
+# password cracking
+brew "aircrack-ng"
 brew "hashcat"
 brew "john-jumbo"
-brew "ghidra"
 brew "ophcrack"
+
+# binary stuff
+brew "ghidra"
 brew "binwalk"
-brew "titus"

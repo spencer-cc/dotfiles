@@ -1,8 +1,3 @@
-# Core packages: shell, configs tooling, essential CLI, fonts
-# Groups: Brewfile (core) | Brewfile.dev | Brewfile.desktop | Brewfile.security
-# Install: just brew install [core|dev|desktop|security|all]
-# System-provided (curl, less, openssh) are not listed.
-
 # Shell & prompt
 brew "nushell"
 brew "bash"
@@ -24,7 +19,6 @@ brew "git-delta"
 
 # Core CLI
 brew "coreutils"
-brew "wget"
 brew "rsync"
 brew "tree"
 brew "bat"
@@ -35,7 +29,6 @@ brew "fzf"
 brew "jq"
 brew "dust"
 brew "glow"
-brew "telnet"
 brew "whois"
 brew "openssh"
 

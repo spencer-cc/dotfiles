@@ -1,19 +1,16 @@
-# Desktop packages: GUI apps, window management, hardware tools
-# Install: just brew install desktop
-
-# ---- Taps ----
+# Taps
 tap "domcyrus/rustnet"
 tap "felixkratz/formulae"
 tap "nikitabobko/tap"
 tap "philocalyst/tap"
 tap "protonpass/tap"
 
-# ---- Window management & bar (launchd services, plists in configs) ----
+# Window management & bar
 brew "felixkratz/formulae/sketchybar"
 brew "felixkratz/formulae/borders"
 cask "font-sketchybar-app-font"
 
-# ---- Casks (GUI apps) ----
+# Casks
 cask "nikitabobko/tap/aerospace"
 cask "alcove"
 cask "apparency"
