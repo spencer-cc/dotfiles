@@ -1,16 +1,14 @@
+# macOS only
 {{ if not (eq .chezmoi.os "darwin") }}
 dot_aerospace.toml
 dot_config/karabiner/
 dot_config/sketchybar/
 dot_config/borders/
 dot_config/opencode/plugin/sketchybar.ts
+run_onchange_mac-defaults.sh.tmpl
+run_onchange_reload-launchd.sh.tmpl
+dot_config/launchd/
 {{ end }}
-
-# Always ignore: machine-specific backups, not configs
-dot_config/karabiner/automatic_backups/
-
-# Local-only SSH config (per-machine hosts, not managed by chezmoi)
-dot_ssh/config.local
 
 # Theme files are source-only, not deployed
 themes/
