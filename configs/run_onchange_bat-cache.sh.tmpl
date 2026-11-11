@@ -1,0 +1,10 @@
+#!/bin/sh
+{{ $modrel := trimAll "/" (trimPrefix .chezmoi.homeDir .chezmoi.sourceDir) }}
+# config: {{ includeTemplate "dot_config/bat/config" $ | sha256sum }}
+{{- range $f := glob (printf "%s/dot_config/bat/themes/*" $modrel) }}
+{{- $src := trimPrefix (printf "%s/" $modrel) $f }}
+# theme {{ $src }}: {{ includeTemplate $src $ | sha256sum }}
+{{ end }}
+if command -v bat >/dev/null 2>&1; then
+  bat cache --build
+fi
