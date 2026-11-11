@@ -1,13 +1,13 @@
 # macOS only
 {{ if not (eq .chezmoi.os "darwin") }}
-dot_aerospace.toml
-dot_config/karabiner/
-dot_config/sketchybar/
-dot_config/borders/
-dot_config/opencode/plugin/sketchybar.ts
-run_onchange_mac-defaults.sh.tmpl
-run_onchange_reload-launchd.sh.tmpl
-dot_config/launchd/
+.aerospace.toml
+.config/karabiner
+.config/sketchybar
+.config/borders
+.config/opencode/plugin/sketchybar.ts
+.config/launchd
+mac-defaults.sh
+reload-launchd.sh
 {{ end }}
 
 # Theme files are source-only, not deployed
