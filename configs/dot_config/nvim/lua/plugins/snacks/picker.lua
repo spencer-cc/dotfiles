@@ -119,7 +119,6 @@ return {
             preview = {
               col = 0,
               row = 0,
-              max_width = 100,
               border = "rounded",
             },
           },
