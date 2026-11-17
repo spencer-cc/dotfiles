@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "synthetic/hf:zai-org/GLM-5.3-Flash",
+  "model": "synthetic/hf:zai-org/GLM-5.3-Flash#high",
   "default_agent": "mentor",
   "share": "disabled",
   "experimental": {
@@ -35,12 +35,40 @@
             },
           },
           "settings": {
-            "reasoningEffort": "medium",
+            "reasoningEffort": "high",
           },
           "variants": [
             { "id": "low", "settings": { "reasoningEffort": "low" } },
-            { "id": "medium", "settings": { "reasoningEffort": "medium" } },
             { "id": "high", "settings": { "reasoningEffort": "high" } },
+            { "id": "max", "settings": { "reasoningEffort": "max" } },
+          ],
+        },
+        "hf:deepseek-ai/DeepSeek-V4.1-Flash-1017": {
+          "name": "DeepSeek V4.1 Flash",
+          "capabilities": {
+            "tools": true,
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+          "limit": {
+            "context": 524288,
+            "output": 65536,
+          },
+          "cost": {
+            "input": 0.6,
+            "output": 1.2,
+            "cache": {
+              "read": 0.03,
+              "write": 0,
+            },
+          },
+          "settings": {
+            "reasoningEffort": "high",
+          },
+          "variants": [
+            { "id": "low", "settings": { "reasoningEffort": "low" } },
+            { "id": "high", "settings": { "reasoningEffort": "high" } },
+            { "id": "xhigh", "settings": { "reasoningEffort": "xhigh" } },
           ],
         },
         "hf:zai-org/GLM-5.3": {
@@ -111,7 +139,7 @@
     "plan": {
       "mode": "primary",
       "color": "#f59a64",
-      "model": "synthetic/hf:zai-org/GLM-5.3-Flash#medium",
+      "model": "synthetic/hf:zai-org/GLM-5.3-Flash#high",
       "permissions": [
         { "action": "read", "resource": "*", "effect": "allow" },
         { "action": "read", "resource": "*.priv", "effect": "deny" },
@@ -144,7 +172,7 @@
     "mentor": {
       "mode": "primary",
       "color": "#c490f0",
-      "model": "synthetic/hf:zai-org/GLM-5.3-Flash#medium",
+      "model": "synthetic/hf:deepseek-ai/DeepSeek-V4.1-Flash-1017#high",
       "permissions": [
         { "action": "read", "resource": "*", "effect": "allow" },
         { "action": "read", "resource": "*.priv", "effect": "deny" },
@@ -170,7 +198,7 @@
     "build": {
       "mode": "primary",
       "color": "#67c0ea",
-      "model": "synthetic/hf:zai-org/GLM-5.3-Flash#medium",
+      "model": "synthetic/hf:zai-org/GLM-5.3-Flash#high",
       "permissions": [
         { "action": "read", "resource": "*", "effect": "allow" },
         { "action": "read", "resource": "*.priv", "effect": "deny" },
@@ -308,7 +336,7 @@
     },
     "librarian": {
       "mode": "subagent",
-      "model": "synthetic/hf:zai-org/GLM-5.3-Flash#medium",
+      "model": "synthetic/hf:zai-org/GLM-5.3-Flash#high",
       "steps": 10,
       "hidden": false,
       "permissions": [
@@ -560,7 +588,7 @@
     },
     "oracle": {
       "mode": "subagent",
-      "model": "synthetic/hf:zai-org/GLM-5.3#max",
+      "model": "synthetic/hf:deepseek-ai/DeepSeek-V4.1-Flash-1017#xhigh",
       "steps": 12,
       "hidden": false,
       "permissions": [
