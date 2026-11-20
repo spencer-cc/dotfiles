@@ -10,6 +10,10 @@ local M = {
 
 function M.setup(opts)
   M.languages = (opts and opts.languages) or {}
+  -- explicit init so AutoFormatToggle's first press actually toggles
+  if vim.g.autoformat_enabled == nil then
+    vim.g.autoformat_enabled = true
+  end
 end
 
 ---- Install command -----------------------------------------------------------
@@ -31,7 +35,11 @@ end
 local function mason_install(pkg_name)
   local registry = require("mason-registry")
   local ok, pkg = pcall(registry.get_package, pkg_name)
-  if ok and not pkg:is_installed() and not pkg:is_installing() then
+  if not ok then
+    vim.notify(("Mason has no package '%s'"):format(pkg_name), vim.log.levels.WARN)
+    return false
+  end
+  if not pkg:is_installed() and not pkg:is_installing() then
     pkg:install()
     return true
   end
@@ -244,7 +252,14 @@ function M.setup_conform()
         formatters_by_ft[ft] = list
       end
       if lang.formatter_args then
-        formatter_opts[lang.formatter] = { append_args = lang.formatter_args }
+        if formatter_opts[lang.formatter] then
+          vim.notify(
+            ("formatter_args for '%s' already set by another language; keeping first definition"):format(lang.formatter),
+            vim.log.levels.WARN
+          )
+        else
+          formatter_opts[lang.formatter] = { append_args = lang.formatter_args }
+        end
       end
     end
   end
@@ -257,17 +272,22 @@ function M.setup_conform()
       if vim.g.autoformat_enabled == false then
         return
       end
-      return { timeout_ms = 1000, lsp_format = "fallback" }
+      -- 3s: LSP-fallback formatters (jdtls) can exceed 1s on first request
+      return { timeout_ms = 3000, lsp_format = "fallback" }
     end,
   })
 
   vim.api.nvim_create_user_command("Format", function()
-    conform.format({ lsp_format = "fallback", async = false })
-  end, { desc = "Format buffer (conform with LSP fallback)" })
+    conform.format({ lsp_format = "fallback", async = false, timeout_ms = 3000 })
+  end, { desc = "Format buffer (conform with LSP fallback)", bar = true })
 end
 
 function M.setup_nvimlint()
   local lint = require("lint")
+
+  -- Pristine args snapshot so repeated setup (:Lazy reload) doesn't
+  -- double-append per-language args onto shared linter definitions.
+  M._linter_args_base = M._linter_args_base or {}
 
   local linters_by_ft = {}
   for _, lang in pairs(M.languages) do
@@ -280,8 +300,14 @@ function M.setup_nvimlint()
         linters_by_ft[ft] = list
       end
       if lang.linter_args and lint.linters[lang.linter] then
-        local linter_def = lint.linters[lang.linter]
-        linter_def.args = vim.list_extend(vim.deepcopy(linter_def.args or {}), lang.linter_args)
+        local name = lang.linter
+        if M._linter_args_base[name] == nil then
+          M._linter_args_base[name] = lint.linters[name].args
+              and vim.deepcopy(lint.linters[name].args)
+            or {}
+        end
+        lint.linters[name].args =
+          vim.list_extend(vim.deepcopy(M._linter_args_base[name]), lang.linter_args)
       end
     end
   end

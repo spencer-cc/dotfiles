@@ -88,7 +88,7 @@ local languages = {
     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "tsx", "jsx" },
     treesitter = { "typescript", "tsx", "javascript", "jsdoc" },
     lsp = "ts_ls",
-    mason = { lsp = "typescript-language-server", formatter = false },
+    mason = { lsp = "typescript-language-server" },
     formatter = "biome",
   },
 
@@ -210,7 +210,7 @@ local languages = {
     filetypes = { "json", "jsonc" },
     treesitter = "json",
     lsp = "jsonls",
-    mason = { lsp = "json-lsp", formatter = false },
+    mason = { lsp = "json-lsp" },
     formatter = "biome",
   },
 
@@ -260,7 +260,7 @@ local languages = {
   },
 
   backus_naur = {
-    filetype = "bnf",
+    filetypes = { "bnf" },
     treesitter = "ebnf",
   },
 }
