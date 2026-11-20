@@ -56,7 +56,6 @@ Catppuccin-mocha (default) with transparent background. Also includes: gruvbox, 
 
 - **Commenting**: built-in `gc`/`gb` operators with ts-comments (treesitter-aware commentstrings)
 - **mini.move**: Move text with Alt+hjkl
-- **vim-sleuth**: Auto-detect indentation
 - **vim-surround**: Surround text objects with brackets/quotes (visual-mode `S` is Flash Treesitter; use `gS` for visual surround)
 - **minipairs**: Auto-pairing for brackets and quotes. Brackets pair only before space/EOL; quotes only open in whitespace contexts, close normally inside pairs
 - **which-key**: Keybind discovery popup with Helix preset. Press `<leader>?` to show all keymaps. Groups: `<leader>f` (File), `<leader>g` (Git), `<leader>h` (Harpoon), `<leader>s` (Search), `<leader>u` (UI), `<leader>d` (Dev Tools), `<leader>M` (Markdown)

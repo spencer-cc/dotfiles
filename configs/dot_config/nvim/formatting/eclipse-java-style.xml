@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Minimal Eclipse JDT formatter profile (loaded by jdtls via
+     java.format.settings.url). Only overrides the essentials; everything
+     else falls back to JDT defaults. Change `tabulation.char` to "tab" to
+     switch back to tabs. -->
+<profiles version="13">
+  <profile kind="CodeFormatterProfile" name="Custom" version="13">
+    <setting id="org.eclipse.jdt.core.formatter.tabulation.char" value="space"/>
+    <setting id="org.eclipse.jdt.core.formatter.tabulation.size" value="2"/>
+    <setting id="org.eclipse.jdt.core.formatter.indentation.size" value="2"/>
+    <setting id="org.eclipse.jdt.core.formatter.use_tabs_only_for_leading_indentations" value="false"/>
+    <setting id="org.eclipse.jdt.core.formatter.indent_switchstatements_compare_to_switch" value="true"/>
+  </profile>
+</profiles>

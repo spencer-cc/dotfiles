@@ -3,4 +3,5 @@
 return {
   "tpope/vim-sleuth",
   event = "BufReadPost", -- detect after buffer is read
+  enabled = false,
 }

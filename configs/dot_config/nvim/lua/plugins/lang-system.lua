@@ -88,8 +88,8 @@ local languages = {
     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "tsx", "jsx" },
     treesitter = { "typescript", "tsx", "javascript", "jsdoc" },
     lsp = "ts_ls",
-    mason = { lsp = "typescript-language-server" },
-    formatter = "prettier",
+    mason = { lsp = "typescript-language-server", formatter = false },
+    formatter = "biome",
   },
 
   java = {
@@ -101,6 +101,31 @@ local languages = {
         { ".project", "mvnw", "gradlew", "settings.gradle", "settings.gradle.kts", ".git" },
         { "build.xml", "pom.xml", "build.gradle", "build.gradle.kts" },
       },
+      settings = {
+        java = {
+          format = {
+            settings = {
+              url = vim.uri_from_fname(vim.fn.expand("~/.config/nvim/formatting/eclipse-java-style.xml")),
+              profile = "Custom",
+            },
+          },
+        },
+      },
+      -- jdt.ls reads formatter settings at startup via initializationOptions
+      -- (the channel vscode-java uses); nvim's didChangeConfiguration push
+      -- alone can be lost during project import.
+      init_options = {
+        settings = {
+          java = {
+            format = {
+              settings = {
+                url = vim.uri_from_fname(vim.fn.expand("~/.config/nvim/formatting/eclipse-java-style.xml")),
+                profile = "Custom",
+              },
+            },
+          },
+        },
+      },
     },
   },
 
@@ -108,7 +133,8 @@ local languages = {
     filetypes = { "markdown", "markdown.mdx", "md" },
     treesitter = { "markdown", "markdown_inline" },
     lsp = "marksman",
-    formatter = "prettier",
+    formatter = "deno_fmt",
+    mason = { formatter = "deno" },
   },
 
   latex = {
@@ -184,8 +210,8 @@ local languages = {
     filetypes = { "json", "jsonc" },
     treesitter = "json",
     lsp = "jsonls",
-    mason = { lsp = "json-lsp" },
-    formatter = "prettier",
+    mason = { lsp = "json-lsp", formatter = false },
+    formatter = "biome",
   },
 
   yaml = {
@@ -193,7 +219,7 @@ local languages = {
     treesitter = "yaml",
     lsp = "yamlls",
     mason = { lsp = "yaml-language-server" },
-    formatter = "prettier",
+    formatter = "yamlfmt",
     linter = "yamllint",
   },
 

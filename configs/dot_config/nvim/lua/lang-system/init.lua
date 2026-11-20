@@ -191,7 +191,10 @@ function M.setup_lspconfig()
   end
 
   local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+  local ok_blink, blink = pcall(require, "blink.cmp")
+  if ok_blink then
+    capabilities = blink.get_lsp_capabilities(capabilities)
+  end
 
   local tool_names = {} -- formatter/linter names to exclude from auto-enabling
 
