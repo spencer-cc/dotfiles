@@ -5,7 +5,7 @@ $env.LESSKEYIN = $"($env.home)/.config/lesskey"
 
 if not (which bat | is-empty) {
   $env.PAGER = "bat"
-  $env.MANPAGER = "sh -c 'sed \"s/\\x1b\\[[0-9;]*m//g\" | bat -l man -p'"
+  $env.MANPAGER = "sh -c 'col -bx | bat -l man -p'"
 }
 
 $env.XDG_CONFIG_HOME = $"($env.home)/.config"
