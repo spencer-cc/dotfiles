@@ -5,7 +5,13 @@ $env.LESSKEYIN = $"($env.home)/.config/lesskey"
 
 if not (which bat | is-empty) {
   $env.PAGER = "bat"
-  $env.MANPAGER = "sh -c 'col -bx | bat -l man -p'"
+  # macOS groff emits backspace-overstrike sequences (needs col -bx);
+  # Linux groff emits SGR escapes, which bat parses natively
+  $env.MANPAGER = if (uname).kernel-name == "Darwin" {
+    "sh -c 'col -bx | bat -l man -p'"
+  } else {
+    "sh -c 'bat -l man -p'"
+  }
 }
 
 $env.XDG_CONFIG_HOME = $"($env.home)/.config"

@@ -119,6 +119,16 @@ alias gb='git branch'
 alias gd="git diff"
 
 # ==== colorize man pages ====
+# macOS groff emits backspace-overstrikes (needs col -bx before bat);
+# Linux groff emits SGR escapes, which bat parses natively
+if command -v bat >/dev/null 2>&1; then
+  export PAGER=bat
+  case "$(uname -s)" in
+    Darwin) export MANPAGER="sh -c 'col -bx | bat -l man -p'" ;;
+    *)      export MANPAGER="sh -c 'bat -l man -p'" ;;
+  esac
+fi
+# fallback for systems without bat: less colors via termcap
 export LESS_TERMCAP_mb=$'\e[1;36m'
 export LESS_TERMCAP_md=$'\e[1;33m'
 export LESS_TERMCAP_me=$'\e[0m'
