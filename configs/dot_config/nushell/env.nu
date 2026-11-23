@@ -4,8 +4,8 @@ $env.LESS = "-R -f"
 $env.LESSKEYIN = $"($env.home)/.config/lesskey"
 
 if not (which bat | is-empty) {
-    $env.GROFF_NO_SGR = "1"
-    $env.MANPAGER = "sh -c 'col -bx | bat -l man -p'"
+  $env.GROFF_NO_SGR = "1"
+  $env.MANPAGER = "sh -c 'col -bx | bat -l man -p'"
 }
 
 $env.XDG_CONFIG_HOME = $"($env.home)/.config"
