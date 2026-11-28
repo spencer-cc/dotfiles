@@ -1,6 +1,7 @@
 let path_additions = [
   "~/.cargo/bin"
   "~/Library/TinyTeX/bin/universal-darwin"
+  "/nix/var/nix/profiles/default/bin"
 ]
 
 $env.PATH = (
