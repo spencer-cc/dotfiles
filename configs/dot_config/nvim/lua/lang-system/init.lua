@@ -285,6 +285,12 @@ end
 function M.setup_nvimlint()
   local lint = require("lint")
 
+  -- nvim-lint's stock rumdl definition parses stderr, but rumdl emits its
+  -- JSON diagnostics on stdout (checked against nvim-lint master 2026-11).
+  if lint.linters.rumdl then
+    lint.linters.rumdl.stream = "stdout"
+  end
+
   -- Pristine args snapshot so repeated setup (:Lazy reload) doesn't
   -- double-append per-language args onto shared linter definitions.
   M._linter_args_base = M._linter_args_base or {}
@@ -302,12 +308,9 @@ function M.setup_nvimlint()
       if lang.linter_args and lint.linters[lang.linter] then
         local name = lang.linter
         if M._linter_args_base[name] == nil then
-          M._linter_args_base[name] = lint.linters[name].args
-              and vim.deepcopy(lint.linters[name].args)
-            or {}
+          M._linter_args_base[name] = lint.linters[name].args and vim.deepcopy(lint.linters[name].args) or {}
         end
-        lint.linters[name].args =
-          vim.list_extend(vim.deepcopy(M._linter_args_base[name]), lang.linter_args)
+        lint.linters[name].args = vim.list_extend(vim.deepcopy(M._linter_args_base[name]), lang.linter_args)
       end
     end
   end

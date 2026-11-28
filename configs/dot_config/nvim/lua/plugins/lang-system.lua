@@ -133,8 +133,9 @@ local languages = {
     filetypes = { "markdown", "markdown.mdx", "md" },
     treesitter = { "markdown", "markdown_inline" },
     lsp = "marksman",
-    formatter = "deno_fmt",
-    mason = { formatter = "deno" },
+    linter = "rumdl",
+    formatter = "rumdl",
+    mason = { formatter = "rumdl" },
   },
 
   latex = {

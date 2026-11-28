@@ -1,0 +1,32 @@
+[global]
+extend-disable = ["MD013"] # no line-length nagging; prose lines never touched
+extend-enable = ["MD060"]  # opt-in: table column alignment
+
+[MD049]
+style = "asterisk" # _italics_ -> *italics*
+
+[MD050]
+style = "asterisk" # __bold__ -> **bold**
+
+[MD060]
+style = "aligned"
+
+[MD026]
+punctuation = "" # keep trailing punctuation on headings
+
+[MD033]
+allowed-elements = [
+  "no-markdown-equivalent",
+] # <kbd>, <abbr>, <details>, <sub>... ok
+disallowed-elements = ["gfm"] # <script>, <iframe>, <style>... always flagged
+
+[MD040]
+style = "consistent"                 # sh/bash/zsh -> one label
+preferred-aliases = { Shell = "sh" } # ...always "sh"
+unknown-language-action = "warn"     # typo labels like ```pyhton flagged
+
+[MD054]
+url-inline = false                     # [url](url) wall-of-text -> <url>
+shortcut = false                       # [text] invisible ref -> [text](url)
+collapsed = false                      # [text][] -> [text](url)
+preferred-style = ["autolink", "auto"]
